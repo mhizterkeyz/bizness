@@ -920,18 +920,6 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@typescript-eslint/eslint-plugin@3.9.1":
-  version "3.9.1"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-3.9.1.tgz#8cf27b6227d12d66dd8dc1f1a4b04d1daad51c2e"
-  integrity sha512-XIr+Mfv7i4paEdBf0JFdIl9/tVxyj+rlilWIfZ97Be0lZ7hPvUbS5iHt9Glc8kRI53dsr0PcAEudbf8rO2wGgg==
-  dependencies:
-    "@typescript-eslint/experimental-utils" "3.9.1"
-    debug "^4.1.1"
-    functional-red-black-tree "^1.0.1"
-    regexpp "^3.0.0"
-    semver "^7.3.2"
-    tsutils "^3.17.1"
-
 "@typescript-eslint/experimental-utils@3.9.1":
   version "3.9.1"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/experimental-utils/-/experimental-utils-3.9.1.tgz#b140b2dc7a7554a44f8a86fb6fe7cbfe57ca059e"
@@ -4649,10 +4637,10 @@ prelude-ls@~1.1.2:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
   integrity sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=
 
-prettier@^1.19.1:
-  version "1.19.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
-  integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
+prettier@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.2.1.tgz#795a1a78dd52f073da0cd42b21f9c91381923ff5"
+  integrity sha512-PqyhM2yCjg/oKkFPtTGUojv7gnZAoG80ttl45O6x2Ug/rMJw4wcc9k6aaf2hibP7BGVCCM33gZoGjyvt9mm16Q==
 
 pretty-format@^25.2.1, pretty-format@^25.5.0:
   version "25.5.0"
@@ -4856,7 +4844,7 @@ regex-not@^1.0.0, regex-not@^1.0.2:
     extend-shallow "^3.0.2"
     safe-regex "^1.1.0"
 
-regexpp@^3.0.0, regexpp@^3.1.0:
+regexpp@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/regexpp/-/regexpp-3.1.0.tgz#206d0ad0a5648cffbdb8ae46438f3dc51c9f78e2"
   integrity sha512-ZOIzd8yVsQQA7j8GCSlPGXwg5PfmA1mrq0JP4nGhh54LaKN3xdai/vHUDu74pKwV8OxseMS65u2NImosQcSD0Q==
