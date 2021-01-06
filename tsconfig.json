@@ -14,7 +14,10 @@
     "incremental": true,
     "typeRoots": ["./types", "./node_modules/@types"],
     "paths": {
-      "@src/*": ["./*"]
+      "@src/*": ["./*"],
+      "@filters/*": ["filters/*"],
+      "@exceptions/*": ["exceptions/*"],
+      "@config/*": ["config/*"],
     }
   },
   "include": ["./src/**/*", "./test/**/*"]
