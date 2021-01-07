@@ -18,6 +18,8 @@
       "@filters/*": ["filters/*"],
       "@exceptions/*": ["exceptions/*"],
       "@config/*": ["config/*"],
+      "@database/*": ["database/*"],
+      "@constants/*": ["constants/*"],
     }
   },
   "include": ["./src/**/*", "./test/**/*"]

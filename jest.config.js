@@ -14,5 +14,7 @@ module.exports = {
     '@filters/(.*)': '<rootDir>/filters/$1',
     '@exceptions/(.*)': '<rootDir>/exceptions/$1',
     '@config/(.*)': '<rootDir>/config/$1',
+    '@database/(.*)': '<rootDir>/database/$1',
+    '@contants/(.*)': '<rootDir>/contants/$1',
   },
 };
