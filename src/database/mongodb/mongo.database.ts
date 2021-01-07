@@ -1,19 +1,19 @@
 import * as mongoose from 'mongoose';
 
 import configuration from '@src/config/configuration';
-import { DatabaseConnection } from "../interfaces";
+import { DatabaseConnection } from '../interfaces';
 
 export class MongoDBConnection implements DatabaseConnection {
   private connection: typeof mongoose;
+  model: typeof mongoose.connection.model;
 
-  constructor () {
-    mongoose.connect(configuration().database.url, {
+  async connect(): Promise<void> {
+    this.connection = await mongoose.connect(configuration().database.url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
-    }).then((mongoConnection) => {
-      this.connection = mongoConnection;
     });
+    this.model = this.connection.model;
   }
 
   async startSession() {

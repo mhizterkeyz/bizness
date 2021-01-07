@@ -20,6 +20,8 @@
       "@config/*": ["config/*"],
       "@database/*": ["database/*"],
       "@constants/*": ["constants/*"],
+      "@models/*": ["models/*"],
+      "@user/*": ["user/*"]
     }
   },
   "include": ["./src/**/*", "./test/**/*"]

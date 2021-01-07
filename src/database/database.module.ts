@@ -5,7 +5,11 @@ import { MongoDBConnection } from './mongodb/mongo.database';
 
 const mongoDBProvider = {
   provide: DB_CONNECTION,
-  useClass: MongoDBConnection
+  useFactory: async (): Promise<MongoDBConnection> => {
+    const dbInstance = new MongoDBConnection();
+    await dbInstance.connect();
+    return dbInstance;
+  },
 };
 
 @Global()

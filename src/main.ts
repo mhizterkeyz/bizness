@@ -13,9 +13,9 @@ import useSwaggerUIAuthStoragePlugin from './swagger_plugin';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
-      origin: '*'
+      origin: '*',
     },
-    bodyParser: false
+    bodyParser: false,
   });
 
   app.useGlobalFilters(new AllExceptionsFilter());
@@ -76,12 +76,11 @@ async function bootstrap() {
   // Starts listening for shutdown hooks
   app.enableShutdownHooks();
 
-
-const configService = app.get(ConfigService);
+  const configService = app.get(ConfigService);
   const server = await app.listen(+configService.get<string>('port'));
 
   server.setTimeout(1200000);
-  
-  console.log(`${process.env.MODE} app running on: ${await app.getUrl()}`);
+
+  console.log(`${process.env.NODE_ENV} app running on: ${await app.getUrl()}`);
 }
 bootstrap();

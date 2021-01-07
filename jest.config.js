@@ -16,5 +16,7 @@ module.exports = {
     '@config/(.*)': '<rootDir>/config/$1',
     '@database/(.*)': '<rootDir>/database/$1',
     '@contants/(.*)': '<rootDir>/contants/$1',
+    '@models/(.*)': '<rootDir>/models/$1',
+    '@user/(.*)': '<rootDir>/user/$1',
   },
 };
