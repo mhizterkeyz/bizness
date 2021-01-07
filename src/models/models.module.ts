@@ -14,7 +14,9 @@ import { UserModel } from './user/user.model';
       useFactory: async (
         connection: MongoDBConnection,
       ): Promise<DBModel<UserDocument>> => {
-        return new UserModel(connection);
+        const model = new UserModel(connection);
+        await model.createCollection();
+        return model;
       },
       inject: [DB_CONNECTION],
     },
