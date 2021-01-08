@@ -21,7 +21,8 @@
       "@database/*": ["database/*"],
       "@constants/*": ["constants/*"],
       "@models/*": ["models/*"],
-      "@user/*": ["user/*"]
+      "@user/*": ["user/*"],
+      "@account/*": ["account/*"]
     }
   },
   "include": ["./src/**/*", "./test/**/*"]

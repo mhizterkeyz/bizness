@@ -18,5 +18,6 @@ module.exports = {
     '@contants/(.*)': '<rootDir>/contants/$1',
     '@models/(.*)': '<rootDir>/models/$1',
     '@user/(.*)': '<rootDir>/user/$1',
+    '@account/(.*)': '<rootDir>/account/$1',
   },
 };

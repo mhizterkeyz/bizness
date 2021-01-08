@@ -7,6 +7,7 @@ import { ModelsModule } from './models/models.module';
 import { UserModule } from './user/user.module';
 import configuration from './config/configuration';
 import { DatabaseModule } from './database/database.module';
+import { AccountModule } from './account/account.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { DatabaseModule } from './database/database.module';
     DatabaseModule,
     ModelsModule,
     UserModule,
+    AccountModule,
   ],
   controllers: [AppController],
   providers: [AppService],
