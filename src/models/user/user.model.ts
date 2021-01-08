@@ -1,4 +1,4 @@
-import { Model, FilterQuery } from 'mongoose';
+import { Model, FilterQuery, SaveOptions, LeanDocument } from 'mongoose';
 
 import { MongoDBConnection } from '@database/mongodb/mongo.database';
 import { USER } from '@constants/index';
@@ -21,7 +21,18 @@ export class UserModel implements DBModel<UserDocument> {
     return this.model.findOne(query);
   }
 
-  find(query: FilterQuery<UserDocument>): Promise<UserDocument[]> {
-    return this.model.find(query).exec();
+  async find(query: FilterQuery<UserDocument>): Promise<UserDocument[]> {
+    return this.model.find(query);
+  }
+
+  async createSingle(doc: LeanDocument<UserDocument>): Promise<UserDocument> {
+    return this.model.create(doc);
+  }
+
+  async createMany(
+    docs: LeanDocument<UserDocument>[],
+    options?: SaveOptions,
+  ): Promise<UserDocument[]> {
+    return this.model.create(docs, options);
   }
 }
