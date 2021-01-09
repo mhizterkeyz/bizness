@@ -12,8 +12,6 @@ import configuration from '@src/config/configuration';
       load: [configuration],
     }),
   ],
-  exports: [
-    ConfigModule,
-  ],
+  exports: [ConfigModule],
 })
 export class TestModule {}

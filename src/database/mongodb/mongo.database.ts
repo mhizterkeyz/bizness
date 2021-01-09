@@ -6,28 +6,29 @@ import { DatabaseConnection, DBSession } from '../interfaces';
 export class SessionManager implements DBSession {
   constructor(private readonly session: mongoose.ClientSession) {}
 
-  startTransaction() {
+  startTransaction(): void {
     this.session.startTransaction();
   }
 
-  async commitTransaction() {
+  async commitTransaction(): Promise<void> {
     await this.session.commitTransaction();
   }
 
-  async abortTransaction() {
+  async abortTransaction(): Promise<void> {
     await this.session.abortTransaction();
   }
 
-  endSession() {
+  endSession(): void {
     this.session.endSession();
   }
 
-  getSession() {
+  getSession(): mongoose.ClientSession {
     return this.session;
   }
 }
 export class MongoDBConnection implements DatabaseConnection {
   private connection: typeof mongoose;
+
   model: typeof mongoose.connection.model;
 
   async connect(): Promise<void> {
@@ -39,7 +40,7 @@ export class MongoDBConnection implements DatabaseConnection {
     this.model = this.connection.model;
   }
 
-  async startSession() {
+  async startSession(): Promise<SessionManager> {
     const session = await this.connection.startSession();
     return new SessionManager(session);
   }

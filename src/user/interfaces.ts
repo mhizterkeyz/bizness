@@ -4,5 +4,9 @@ export interface User {
   email: string;
   password: string;
 
-  isDeleted?: Boolean;
+  isDeleted?: boolean;
+}
+
+export interface UserDocument extends User {
+  id: string;
 }

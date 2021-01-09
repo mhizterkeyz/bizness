@@ -1,21 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { USER } from '@constants/index';
-import { UserModel } from '@models/user/user.model';
+import { UserModel } from '@models/interfaces';
+import { DBSession } from '@database/interfaces';
 import { UserDTO } from './dtos/user.dto';
-import { SessionManager } from '@database/mongodb/mongo.database';
 import { User } from './interfaces';
 
 @Injectable()
 export class UserService {
-  constructor(@Inject(USER) private readonly userModel: UserModel) {}
+  constructor(@Inject(USER) private readonly userModel: UserModel<User>) {}
 
-  async createSingleUser(
-    userDTO: UserDTO,
-    session: SessionManager,
-  ): Promise<User> {
+  async createSingleUser(userDTO: UserDTO, session: DBSession): Promise<User> {
     const [user] = await this.userModel.createMany([userDTO], { session });
 
-    return user.toJSON();
+    return user;
   }
 }

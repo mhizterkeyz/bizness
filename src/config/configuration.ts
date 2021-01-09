@@ -12,6 +12,6 @@ export default (): Configuration => ({
   port: parseInt(process.env.PORT, 10) || 3000,
   isTest: process.env.NODE_ENV === 'test',
   database: {
-    url: process.env.DB_URL
-  }
+    url: process.env.DB_URL,
+  },
 });
