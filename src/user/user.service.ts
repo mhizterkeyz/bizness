@@ -20,4 +20,10 @@ export class UserService {
 
     return user;
   }
+
+  async duplicateExits(fields: Partial<User>): Promise<boolean> {
+    const user = await this.userModel.findOne({ ...fields, isDeleted: false });
+
+    return !!user;
+  }
 }
