@@ -1,8 +1,31 @@
 import * as mongoose from 'mongoose';
 
 import configuration from '@src/config/configuration';
-import { DatabaseConnection } from '../interfaces';
+import { DatabaseConnection, DBSession } from '../interfaces';
 
+export class SessionManager implements DBSession {
+  constructor(private readonly session: mongoose.ClientSession) {}
+
+  startTransaction() {
+    this.session.startTransaction();
+  }
+
+  async commitTransaction() {
+    await this.session.commitTransaction();
+  }
+
+  async abortTransaction() {
+    await this.session.abortTransaction();
+  }
+
+  endSession() {
+    this.session.endSession();
+  }
+
+  getSession() {
+    return this.session;
+  }
+}
 export class MongoDBConnection implements DatabaseConnection {
   private connection: typeof mongoose;
   model: typeof mongoose.connection.model;
@@ -17,6 +40,7 @@ export class MongoDBConnection implements DatabaseConnection {
   }
 
   async startSession() {
-    return this.connection.startSession();
+    const session = await this.connection.startSession();
+    return new SessionManager(session);
   }
 }

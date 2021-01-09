@@ -1,9 +1,9 @@
-import { Model, FilterQuery, SaveOptions, LeanDocument } from 'mongoose';
+import { Model, FilterQuery, LeanDocument, SaveOptions } from 'mongoose';
 
 import { MongoDBConnection } from '@database/mongodb/mongo.database';
 import { USER } from '@constants/index';
 import { DBModel } from '../interfaces';
-import { UserDocument } from './interfaces';
+import { ModelSaveOptions, UserDocument } from './interfaces';
 import { userSchema } from './user.schema';
 
 export class UserModel implements DBModel<UserDocument> {
@@ -31,8 +31,13 @@ export class UserModel implements DBModel<UserDocument> {
 
   async createMany(
     docs: LeanDocument<UserDocument>[],
-    options?: SaveOptions,
+    options?: ModelSaveOptions,
   ): Promise<UserDocument[]> {
-    return this.model.create(docs, options);
+    const saveOptions: SaveOptions = {};
+    if (options.session) {
+      saveOptions.session = options.session.getSession();
+    }
+
+    return this.model.create(docs, saveOptions);
   }
 }
