@@ -7,20 +7,22 @@ import { UserModel as DBUserModel } from './interfaces';
 import { UserDocument } from './user/interfaces';
 import { UserModel } from './user/user.model';
 
+const providers = [
+  {
+    provide: USER,
+    useFactory: async (
+      connection: MongoDBConnection,
+    ): Promise<DBUserModel<User, UserDocument>> => {
+      const model = new UserModel(connection);
+      await model.createCollection();
+      return model;
+    },
+    inject: [DB_CONNECTION],
+  },
+];
 @Global()
 @Module({
-  providers: [
-    {
-      provide: USER,
-      useFactory: async (
-        connection: MongoDBConnection,
-      ): Promise<DBUserModel<User, UserDocument>> => {
-        const model = new UserModel(connection);
-        await model.createCollection();
-        return model;
-      },
-      inject: [DB_CONNECTION],
-    },
-  ],
+  providers,
+  exports: providers,
 })
 export class ModelsModule {}
