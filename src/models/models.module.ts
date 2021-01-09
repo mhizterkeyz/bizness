@@ -2,7 +2,8 @@ import { Global, Module } from '@nestjs/common';
 
 import { DB_CONNECTION, USER } from '@constants/index';
 import { MongoDBConnection } from '@database/mongodb/mongo.database';
-import { DBModel } from './interfaces';
+import { User } from '@src/user/interfaces';
+import { UserModel as DBUserModel } from './interfaces';
 import { UserDocument } from './user/interfaces';
 import { UserModel } from './user/user.model';
 
@@ -13,7 +14,7 @@ import { UserModel } from './user/user.model';
       provide: USER,
       useFactory: async (
         connection: MongoDBConnection,
-      ): Promise<DBModel<UserDocument>> => {
+      ): Promise<DBUserModel<User, UserDocument>> => {
         const model = new UserModel(connection);
         await model.createCollection();
         return model;

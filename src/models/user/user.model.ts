@@ -3,7 +3,7 @@ import { Model, FilterQuery, SaveOptions } from 'mongoose';
 import { MongoDBConnection } from '@database/mongodb/mongo.database';
 import { USER } from '@constants/index';
 import { User } from '@src/user/interfaces';
-import { DBModel } from '../interfaces';
+import { UserModel as DBModel } from '../interfaces';
 import { ModelSaveOptions, UserDocument } from './interfaces';
 import { userSchema } from './user.schema';
 

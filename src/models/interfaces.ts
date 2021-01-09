@@ -5,6 +5,4 @@ export interface DBModel<T, S> {
   createMany: <A extends T, B>(query: A[], options?: B) => Promise<T[]>;
 }
 
-export interface UserModel<T, S> extends DBModel<T, S> {
-  stuff: any;
-}
+export type UserModel<T, S> = DBModel<T, S>;
