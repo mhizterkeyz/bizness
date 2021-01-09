@@ -22,23 +22,27 @@ export class UserModel implements DBModel<User, UserDocument> {
     return this.model.findOne(query);
   }
 
-  async find(query: FilterQuery<User>): Promise<UserDocument[]> {
-    return this.model.find(query);
-  }
-
-  async createSingle(doc: User): Promise<UserDocument> {
-    return this.model.create(doc);
-  }
-
-  async createMany(
-    docs: User[],
+  async create<T extends User | User[]>(
+    doc: T,
     options?: ModelSaveOptions,
-  ): Promise<UserDocument[]> {
+  ): Promise<T extends UserDocument ? UserDocument : UserDocument[]> {
     const saveOptions: SaveOptions = {};
+
     if (options.session) {
       saveOptions.session = options.session.getSession();
     }
+    if (Array.isArray(doc)) {
+      return <Promise<T extends UserDocument ? UserDocument : UserDocument[]>>(
+        this.model.create(<User[]>doc, saveOptions)
+      );
+    }
 
-    return this.model.create(docs, saveOptions);
+    return <Promise<T extends UserDocument ? UserDocument : UserDocument[]>>(
+      this.model.create(<User>doc)
+    );
+  }
+
+  async find(query: FilterQuery<User>): Promise<UserDocument[]> {
+    return this.model.find(query);
   }
 }
