@@ -12,7 +12,10 @@ export class UserService {
     @Inject(USER) private readonly userModel: UserModel<User, UserDocument>,
   ) {}
 
-  async createSingleUser(userDTO: UserDTO, session: DBSession): Promise<User> {
+  async createSingleUser(
+    userDTO: UserDTO,
+    session: DBSession,
+  ): Promise<UserDocument> {
     const [user] = await this.userModel.create([userDTO], { session });
 
     return user;
