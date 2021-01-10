@@ -23,7 +23,8 @@
       "@models/*": ["models/*"],
       "@user/*": ["user/*"],
       "@account/*": ["account/*"],
-      "@auth/*": ["auth/*"]
+      "@auth/*": ["auth/*"],
+      "@util/*": ["util/*"]
     }
   },
   "include": ["./src/**/*", "./test/**/*"]

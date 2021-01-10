@@ -1,11 +1,16 @@
-export interface UserObject {
+interface Base {
   name: string;
   username?: string;
   email: string;
-  accessToken?: string;
-  isDeleted?: boolean;
 }
-export interface User extends UserObject {
+
+export interface UserObject extends Base {
+  accessToken?: string;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface User extends Base {
   password: string;
 }
 

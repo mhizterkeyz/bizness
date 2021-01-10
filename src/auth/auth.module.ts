@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
 import configuration from '@config/configuration';
 import { AccountModule } from '@account/account.module';
 import { UserModule } from '@user/user.module';
 import { LocalStrategy } from './strategies/local.strategy';
+import { AuthService } from './auth.service';
 
 @Module({
   imports: [
@@ -14,9 +15,10 @@ import { LocalStrategy } from './strategies/local.strategy';
         signOptions: { expiresIn: configuration().jwt.expiresIn },
       }),
     }),
-    AccountModule,
+    forwardRef(() => AccountModule),
     UserModule,
   ],
-  providers: [LocalStrategy],
+  providers: [LocalStrategy, AuthService],
+  exports: [LocalStrategy, AuthService],
 })
 export class AuthModule {}

@@ -27,6 +27,8 @@ export const userSchema = new Schema<UserDocument>(
     toJSON: {
       virtuals: true,
       transform: (_doc: any, ret: any): void => {
+        delete ret._id;
+        delete ret.__v;
         delete ret.password;
       },
     },

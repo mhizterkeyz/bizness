@@ -39,21 +39,20 @@ export class AccountService {
     }
   }
 
-  async login(loginDTO: LoginDTO): Promise<UserObject> {
+  async login(loginDTO: LoginDTO): Promise<UserObject | null> {
     const { username, password } = loginDTO;
 
     const user = await this.userService.validateUser(username, password);
-    if (user) {
-      const userObject = user.toJSON();
-      userObject.accessToken = this.authService.signJWTPayload(
-        user.id,
-        user.password,
-      );
 
-      return userObject;
-    }
+    if (!user) return null;
 
-    return user;
+    const userObject = user.toJSON();
+    userObject.accessToken = this.authService.signJWTPayload(
+      user.id,
+      user.password,
+    );
+
+    return userObject;
   }
 
   async uniqueDetailsOrFail(userDTO: UserDTO): Promise<void> {

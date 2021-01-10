@@ -9,6 +9,7 @@ import configuration from './config/configuration';
 import { DatabaseModule } from './database/database.module';
 import { AccountModule } from './account/account.module';
 import { AuthModule } from './auth/auth.module';
+import { UtilModule } from './util/util.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     AccountModule,
     AuthModule,
+    UtilModule,
   ],
   controllers: [AppController],
   providers: [AppService],

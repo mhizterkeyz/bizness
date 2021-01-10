@@ -20,5 +20,6 @@ module.exports = {
     '@user/(.*)': '<rootDir>/user/$1',
     '@account/(.*)': '<rootDir>/account/$1',
     '@auth/(.*)': '<rootDir>/auth/$1',
+    '@util/(.*)': '<rootDir>/util/$1',
   },
 };

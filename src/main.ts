@@ -9,6 +9,7 @@ import { AppModule } from './app.module';
 import { ValidationException } from './exceptions/validation.exception';
 import { AllExceptionsFilter } from './filters/all.filter';
 import useSwaggerUIAuthStoragePlugin from './swagger_plugin';
+import { ValidationFilter } from './filters/validation.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -18,7 +19,7 @@ async function bootstrap() {
     bodyParser: false,
   });
 
-  app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalFilters(new AllExceptionsFilter(), new ValidationFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
