@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import configuration from './config/configuration';
 import { DatabaseModule } from './database/database.module';
 import { AccountModule } from './account/account.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AccountModule } from './account/account.module';
     ModelsModule,
     UserModule,
     AccountModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

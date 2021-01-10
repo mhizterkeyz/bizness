@@ -5,6 +5,11 @@ export interface Configuration {
   database: {
     url: string;
   };
+  passwordHashSaltRounds: number;
+  jwt: {
+    secret: string;
+    expiresIn: string;
+  };
 }
 
 export default (): Configuration => ({
@@ -13,5 +18,10 @@ export default (): Configuration => ({
   isTest: process.env.NODE_ENV === 'test',
   database: {
     url: process.env.DB_URL,
+  },
+  passwordHashSaltRounds: +process.env.PASSWORD_HASH_SALT_ROUNDS || 8,
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    expiresIn: process.env.JWT_EXPIRES_IN,
   },
 });
