@@ -46,4 +46,19 @@ export class UserModel implements DBModel<User, UserDocument> {
   async find(query: FilterQuery<User>): Promise<UserDocument[]> {
     return this.model.find(replaceID(query));
   }
+
+  async updateMany(
+    query: FilterQuery<User>,
+    update: Partial<User>,
+    options?: ModelSaveOptions,
+  ): Promise<Record<string, unknown>> {
+    const saveOptions: SaveOptions = {};
+    const queryWithReplacedID = replaceID(query);
+
+    if (options.session) {
+      saveOptions.session = options.session.getSession();
+    }
+
+    return this.model.updateMany(queryWithReplacedID, update, saveOptions);
+  }
 }
