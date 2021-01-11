@@ -6,6 +6,7 @@ import { User } from '@src/user/interfaces';
 import { UserModel as DBModel } from '../interfaces';
 import { ModelSaveOptions, UserDocument } from './interfaces';
 import { userSchema } from './user.schema';
+import { replaceID } from '../util';
 
 export class UserModel implements DBModel<User, UserDocument> {
   model: Model<UserDocument>;
@@ -19,7 +20,7 @@ export class UserModel implements DBModel<User, UserDocument> {
   }
 
   async findOne(query: FilterQuery<User>): Promise<UserDocument> {
-    return this.model.findOne(query);
+    return this.model.findOne(replaceID(query));
   }
 
   async create<T extends User | User[]>(
@@ -43,6 +44,6 @@ export class UserModel implements DBModel<User, UserDocument> {
   }
 
   async find(query: FilterQuery<User>): Promise<UserDocument[]> {
-    return this.model.find(query);
+    return this.model.find(replaceID(query));
   }
 }

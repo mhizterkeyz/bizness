@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
+import { isNil } from 'lodash';
 
 export class PaginationMetaData {
   @ApiProperty({
@@ -71,23 +72,19 @@ export class ResponseService {
   ): JSONResponse<T> {
     const responseObject: JSONResponse<T> = {};
 
-    if (this.isNotNil(message)) {
+    if (!isNil(message)) {
       responseObject.message = message;
     }
-    if (this.isNotNil(data)) {
+    if (!isNil(data)) {
       responseObject.data = data;
     }
-    if (this.isNotNil(meta)) {
+    if (!isNil(meta)) {
       responseObject.meta = meta;
     }
-    if (this.isNotNil(code)) {
+    if (!isNil(code)) {
       responseObject.code = code;
     }
 
     return responseObject;
-  }
-
-  private isNotNil(value) {
-    return value !== null && value !== undefined;
   }
 }

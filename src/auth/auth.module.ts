@@ -6,6 +6,7 @@ import { AccountModule } from '@account/account.module';
 import { UserModule } from '@user/user.module';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AuthService } from './auth.service';
+import { JWTStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { AuthService } from './auth.service';
     forwardRef(() => AccountModule),
     UserModule,
   ],
-  providers: [LocalStrategy, AuthService],
-  exports: [LocalStrategy, AuthService],
+  providers: [LocalStrategy, JWTStrategy, AuthService],
+  exports: [AuthService],
 })
 export class AuthModule {}

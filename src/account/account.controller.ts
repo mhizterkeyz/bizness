@@ -1,13 +1,14 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { get } from 'lodash';
 
@@ -15,6 +16,7 @@ import { LocalGuard } from '@auth/strategies/local.strategy';
 import { UserObject } from '@user/interfaces';
 import { JSONResponse, ResponseService } from '@util/response.service';
 import { UserDTO } from '@user/dtos/user.dto';
+import { JWTGuard } from '@auth/strategies/jwt.strategy';
 import { AccountService } from './account.service';
 import { LoginDTO } from './dtos/login.dto';
 
@@ -58,5 +60,17 @@ export class AccountController {
       'Account created',
       userObject,
     );
+  }
+
+  @ApiOperation({
+    description: 'get user account details',
+  })
+  @ApiBearerAuth()
+  @UseGuards(JWTGuard)
+  @Get()
+  async accountDetails(@Req() req: Request): Promise<JSONResponse<UserObject>> {
+    const user = <UserObject>get(req, 'user', {});
+
+    return this.responseService.jsonFormat<UserObject>('Account details', user);
   }
 }
