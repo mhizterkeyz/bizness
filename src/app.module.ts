@@ -10,6 +10,7 @@ import { DatabaseModule } from './database/database.module';
 import { AccountModule } from './account/account.module';
 import { AuthModule } from './auth/auth.module';
 import { UtilModule } from './util/util.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UtilModule } from './util/util.module';
     AccountModule,
     AuthModule,
     UtilModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

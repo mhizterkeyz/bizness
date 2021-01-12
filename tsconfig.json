@@ -24,7 +24,8 @@
       "@user/*": ["user/*"],
       "@account/*": ["account/*"],
       "@auth/*": ["auth/*"],
-      "@util/*": ["util/*"]
+      "@util/*": ["util/*"],
+      "@email/*": ["email/*"]
     }
   },
   "include": ["./src/**/*", "./test/**/*"]

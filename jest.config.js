@@ -21,5 +21,6 @@ module.exports = {
     '@account/(.*)': '<rootDir>/account/$1',
     '@auth/(.*)': '<rootDir>/auth/$1',
     '@util/(.*)': '<rootDir>/util/$1',
+    '@email/(.*)': '<rootDir>/email/$1',
   },
 };
