@@ -11,7 +11,12 @@ export interface DBModel<T, S> {
     query: FilterQuery<T>,
     update: A,
     opt?: B,
-  ) => Promise<Record<string, unknown>>;
+  ) => Promise<T>;
+  updateOne: <A extends T, B>(
+    query: FilterQuery<T>,
+    update: A,
+    opt?: B,
+  ) => Promise<T>;
 }
 
 export type UserModel<T, S> = DBModel<T, S>;

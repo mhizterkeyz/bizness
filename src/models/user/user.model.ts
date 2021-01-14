@@ -51,7 +51,7 @@ export class UserModel implements DBModel<User, UserDocument> {
     query: FilterQuery<User>,
     update: Partial<User>,
     options?: ModelSaveOptions,
-  ): Promise<Record<string, unknown>> {
+  ): Promise<User> {
     const saveOptions: SaveOptions = {};
     const queryWithReplacedID = replaceID(query);
 
@@ -60,5 +60,20 @@ export class UserModel implements DBModel<User, UserDocument> {
     }
 
     return this.model.updateMany(queryWithReplacedID, update, saveOptions);
+  }
+
+  async updateOne(
+    query: FilterQuery<User>,
+    update: Partial<User>,
+    options?: ModelSaveOptions,
+  ): Promise<User> {
+    const saveOptions: SaveOptions = {};
+    const queryWithReplacedID = replaceID(query);
+
+    if (options.session) {
+      saveOptions.session = options.session.getSession();
+    }
+
+    return this.model.updateOne(queryWithReplacedID, update, saveOptions);
   }
 }
