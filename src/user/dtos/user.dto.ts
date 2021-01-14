@@ -4,11 +4,11 @@ import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 export class UserDTO {
   @ApiProperty({
     description: 'fullname of user',
-    required: true,
+    required: false,
   })
   @IsString()
-  @IsNotEmpty()
-  name: string;
+  @IsOptional()
+  name?: string;
 
   @ApiProperty({
     description: 'username of user',

@@ -22,7 +22,7 @@ export interface DBModel<T, S, K extends SaveOptions> {
     query: FilterQuery<T>,
     update: Partial<A>,
     opt?: K,
-  ) => Promise<S>;
+  ) => Promise<S[]>;
   updateOne: <A extends T>(
     query: FilterQuery<T>,
     update: Partial<A>,

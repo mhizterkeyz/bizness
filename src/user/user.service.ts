@@ -62,9 +62,30 @@ export class UserService {
     session?: DBSession,
   ): Promise<UserDocument> {
     if (session) {
-      return this.userModel.updateMany(query, update, { session });
+      return this.userModel.updateOne(query, update, { session });
     }
 
-    return this.userModel.updateMany(query, update);
+    return this.userModel.updateOne(query, update);
+  }
+
+  async updateUserPassword(
+    _id: string,
+    password: string,
+    session?: DBSession,
+  ): Promise<UserDocument> {
+    const hashedPassword = await hash(
+      password,
+      configuration().passwordHashSaltRounds,
+    );
+
+    if (session) {
+      return this.userModel.updateOne(
+        { _id },
+        { password: hashedPassword },
+        { session },
+      );
+    }
+
+    return this.userModel.updateOne({ _id }, { password: hashedPassword });
   }
 }

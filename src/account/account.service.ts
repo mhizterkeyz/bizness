@@ -1,12 +1,24 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 import { DB_CONNECTION } from '@constants/index';
 import { DatabaseConnection } from '@database/interfaces';
 import { UserDTO } from '@user/dtos/user.dto';
-import { UserObject } from '@user/interfaces';
+import { UserDocument, UserObject } from '@user/interfaces';
 import { UserService } from '@user/user.service';
 import { AuthService } from '@auth/auth.service';
 import { LoginDTO } from './dtos/login.dto';
+import {
+  AccountEmailUpdateDTO,
+  AccountPasswordUpdateDTO,
+  AccountUpdateDTO,
+  AccountUsernameUpdateDTO,
+} from './dtos/account.update.dto';
 
 @Injectable()
 export class AccountService {
@@ -56,21 +68,94 @@ export class AccountService {
   }
 
   async uniqueDetailsOrFail(userDTO: UserDTO): Promise<void> {
+    if (userDTO.username) {
+      await Promise.all([
+        this.checkDuplicateEmail(userDTO.email),
+        this.checkDuplicateUsername(userDTO.username),
+      ]);
+    } else {
+      await this.checkDuplicateEmail(userDTO.email);
+    }
+  }
+
+  async updateAccountDetails(
+    user: UserDocument,
+    accountUpdateDTO: AccountUpdateDTO,
+  ): Promise<UserDocument> {
+    return this.userService.updateUser({ _id: user.id }, accountUpdateDTO);
+  }
+
+  async updateAccountEmail(
+    user: UserDocument,
+    accountEmailUpdateDTO: AccountEmailUpdateDTO,
+  ): Promise<UserDocument> {
+    const { email, password } = accountEmailUpdateDTO;
+    const validatedUser = await this.userService.validateUser(
+      user.email,
+      password,
+    );
+
+    if (!validatedUser) {
+      throw new UnauthorizedException('invalid credentials');
+    }
+    await this.checkDuplicateEmail(email);
+
+    return this.userService.updateUser({ _id: validatedUser.id }, { email });
+  }
+
+  async updateAccountUsername(
+    user: UserDocument,
+    accountUsernameUpdateDTO: AccountUsernameUpdateDTO,
+  ): Promise<UserDocument> {
+    return this.userService.updateUser(
+      { _id: user.id },
+      accountUsernameUpdateDTO,
+    );
+  }
+
+  async updateAccountPassword(
+    user: UserDocument,
+    accountPasswordUpdateDTO: AccountPasswordUpdateDTO,
+  ): Promise<UserDocument> {
+    const {
+      oldPassword,
+      newPassword,
+      confirmNewPassword,
+    } = accountPasswordUpdateDTO;
+
+    if (newPassword !== confirmNewPassword) {
+      throw new BadRequestException('passwords do no match');
+    }
+
+    const validatedUser = await this.userService.validateUser(
+      user.email,
+      oldPassword,
+    );
+
+    if (!validatedUser) {
+      throw new UnauthorizedException('wrong old password');
+    }
+
+    return this.userService.updateUserPassword(validatedUser.id, newPassword);
+  }
+
+  async checkDuplicateEmail(email: string): Promise<void> {
     const emailExists = await this.userService.duplicateExits({
-      email: userDTO.email,
+      email,
     });
 
     if (emailExists) {
       throw new ConflictException('email already taken');
     }
-    if (userDTO.username) {
-      const usernameExists = await this.userService.duplicateExits({
-        username: userDTO.username,
-      });
+  }
 
-      if (usernameExists) {
-        throw new ConflictException('username already taken');
-      }
+  async checkDuplicateUsername(username: string): Promise<void> {
+    const usernameExists = await this.userService.duplicateExits({
+      username,
+    });
+
+    if (usernameExists) {
+      throw new ConflictException('username already taken');
     }
   }
 }

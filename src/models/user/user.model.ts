@@ -29,7 +29,7 @@ export class UserModel implements DBModel<User, UserDocument> {
   ): Promise<T extends UserDocument ? UserDocument : UserDocument[]> {
     const saveOptions: SaveOptions = {};
 
-    if (options.session) {
+    if (options && options.session) {
       saveOptions.session = options.session.getSession();
     }
     if (Array.isArray(doc)) {
@@ -51,15 +51,17 @@ export class UserModel implements DBModel<User, UserDocument> {
     query: FilterQuery<User>,
     update: Partial<User>,
     options?: ModelSaveOptions,
-  ): Promise<UserDocument> {
+  ): Promise<UserDocument[]> {
     const saveOptions: SaveOptions = {};
     const queryWithReplacedID = replaceID(query);
+    const items = await this.find(query);
 
-    if (options.session) {
+    if (options && options.session) {
       saveOptions.session = options.session.getSession();
     }
 
-    return this.model.updateMany(queryWithReplacedID, update, saveOptions);
+    await this.model.updateMany(queryWithReplacedID, update, saveOptions);
+    return this.find({ _id: { $in: items.map((item) => item.id) } });
   }
 
   async updateOne(
@@ -69,11 +71,13 @@ export class UserModel implements DBModel<User, UserDocument> {
   ): Promise<UserDocument> {
     const saveOptions: SaveOptions = {};
     const queryWithReplacedID = replaceID(query);
+    const item = await this.findOne(query);
 
-    if (options.session) {
+    if (options && options.session) {
       saveOptions.session = options.session.getSession();
     }
 
-    return this.model.updateOne(queryWithReplacedID, update, saveOptions);
+    await this.model.updateOne(queryWithReplacedID, update, saveOptions);
+    return this.findOne({ _id: item.id });
   }
 }

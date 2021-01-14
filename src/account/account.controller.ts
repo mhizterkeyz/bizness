@@ -5,20 +5,25 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Req,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
-import { get } from 'lodash';
 
 import { LocalGuard } from '@auth/strategies/local.strategy';
-import { UserObject } from '@user/interfaces';
+import { UserDocument, UserObject } from '@user/interfaces';
 import { JSONResponse, ResponseService } from '@util/response.service';
 import { UserDTO } from '@user/dtos/user.dto';
 import { JWTGuard } from '@auth/strategies/jwt.strategy';
 import { AccountService } from './account.service';
 import { LoginDTO } from './dtos/login.dto';
+import {
+  AccountEmailUpdateDTO,
+  AccountPasswordUpdateDTO,
+  AccountUpdateDTO,
+  AccountUsernameUpdateDTO,
+} from './dtos/account.update.dto';
+import { CurrentUser } from './decorators/current.user.decorator';
 
 @Controller('accounts')
 @ApiTags('Accounts')
@@ -38,12 +43,10 @@ export class AccountController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   login(
-    @Req() req: Request,
     @Body() _loginDTO: LoginDTO,
+    @CurrentUser() user: UserObject,
   ): JSONResponse<UserObject> {
-    const userObject = <UserObject>get(req, 'user', {});
-
-    return this.responseService.jsonFormat<UserObject>('Logged in', userObject);
+    return this.responseService.jsonFormat('Logged in', user);
   }
 
   @ApiOperation({
@@ -68,9 +71,108 @@ export class AccountController {
   @ApiBearerAuth()
   @UseGuards(JWTGuard)
   @Get()
-  async accountDetails(@Req() req: Request): Promise<JSONResponse<UserObject>> {
-    const user = <UserObject>get(req, 'user', {});
+  async accountDetails(
+    @CurrentUser() user: UserDocument,
+  ): Promise<JSONResponse<UserObject>> {
+    return this.responseService.jsonFormat<UserObject>(
+      'Account details',
+      user.toJSON(),
+    );
+  }
 
-    return this.responseService.jsonFormat<UserObject>('Account details', user);
+  @ApiOperation({
+    summary: 'update account details',
+  })
+  @ApiBody({
+    type: AccountUpdateDTO,
+  })
+  @ApiBearerAuth()
+  @UseGuards(JWTGuard)
+  @Put()
+  async updateAccountDetails(
+    @CurrentUser() user: UserDocument,
+    @Body() accountUpdateDTO: AccountUpdateDTO,
+  ): Promise<JSONResponse<UserObject>> {
+    const updatedUser = await this.accountService.updateAccountDetails(
+      user,
+      accountUpdateDTO,
+    );
+
+    return this.responseService.jsonFormat(
+      'Account updated',
+      updatedUser.toJSON(),
+    );
+  }
+
+  @ApiOperation({
+    summary: 'update account email',
+  })
+  @ApiBody({
+    type: AccountEmailUpdateDTO,
+  })
+  @ApiBearerAuth()
+  @UseGuards(JWTGuard)
+  @Put('/email')
+  async updateAccountEmail(
+    @CurrentUser() user: UserDocument,
+    @Body() accountEmailUpdateDTO: AccountEmailUpdateDTO,
+  ): Promise<JSONResponse<UserObject>> {
+    const updatedUser = await this.accountService.updateAccountEmail(
+      user,
+      accountEmailUpdateDTO,
+    );
+
+    return this.responseService.jsonFormat(
+      'Account email updated',
+      updatedUser.toJSON(),
+    );
+  }
+
+  @ApiOperation({
+    summary: 'update account username',
+  })
+  @ApiBody({
+    type: AccountUsernameUpdateDTO,
+  })
+  @ApiBearerAuth()
+  @UseGuards(JWTGuard)
+  @Put('/username')
+  async updateAccountUsername(
+    @CurrentUser() user: UserDocument,
+    @Body() accountUsernameUpdateDTO: AccountUsernameUpdateDTO,
+  ): Promise<JSONResponse<UserObject>> {
+    const updatedUser = await this.accountService.updateAccountUsername(
+      user,
+      accountUsernameUpdateDTO,
+    );
+
+    return this.responseService.jsonFormat(
+      'Account username updated',
+      updatedUser.toJSON(),
+    );
+  }
+
+  @ApiOperation({
+    summary: 'update account password',
+  })
+  @ApiBody({
+    type: AccountPasswordUpdateDTO,
+  })
+  @ApiBearerAuth()
+  @UseGuards(JWTGuard)
+  @Put('/password')
+  async updateAccountPassword(
+    @CurrentUser() user: UserDocument,
+    @Body() accountPasswordUpdateDTO: AccountPasswordUpdateDTO,
+  ): Promise<JSONResponse<UserObject>> {
+    const updatedUser = await this.accountService.updateAccountPassword(
+      user,
+      accountPasswordUpdateDTO,
+    );
+
+    return this.responseService.jsonFormat(
+      'Account password updated',
+      updatedUser.toJSON(),
+    );
   }
 }

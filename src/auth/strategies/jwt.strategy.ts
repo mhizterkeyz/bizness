@@ -22,7 +22,7 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
       sub: { id, password },
     } = payload;
 
-    return this.userService.findSingleUser({ id, password });
+    return this.userService.findSingleUser({ id, password, isDeleted: false });
   }
 }
 

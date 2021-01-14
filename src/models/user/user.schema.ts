@@ -6,7 +6,6 @@ export const userSchema = new Schema<UserDocument>(
   {
     name: {
       type: String,
-      required: true,
     },
     username: String,
     email: {

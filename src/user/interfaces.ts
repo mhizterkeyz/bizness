@@ -1,5 +1,5 @@
 interface Base {
-  name: string;
+  name?: string;
   username?: string;
   email: string;
 }
