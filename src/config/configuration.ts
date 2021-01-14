@@ -10,6 +10,7 @@ export interface Configuration {
     secret: string;
     expiresIn: string;
   };
+  mailService: string;
 }
 
 export default (): Configuration => ({
@@ -24,4 +25,5 @@ export default (): Configuration => ({
     secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRES_IN,
   },
+  mailService: process.env.EMAIL_SERVICE,
 });
