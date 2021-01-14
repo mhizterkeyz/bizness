@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { hash, compare } from 'bcryptjs';
+import { FilterQuery } from 'mongoose';
 
 import { USER } from '@constants/index';
 import { UserModel } from '@models/interfaces';
@@ -45,13 +46,25 @@ export class UserService {
     return user;
   }
 
-  async findSingleUser(fields: Partial<UserDocument>): Promise<UserDocument> {
+  async findSingleUser(fields: FilterQuery<User>): Promise<UserDocument> {
     return this.userModel.findOne(fields);
   }
 
-  async duplicateExits(fields: Partial<User>): Promise<boolean> {
+  async duplicateExits(fields: FilterQuery<User>): Promise<boolean> {
     const user = await this.userModel.findOne({ ...fields, isDeleted: false });
 
     return !!user;
+  }
+
+  async updateUser(
+    query: FilterQuery<User>,
+    update: Partial<User>,
+    session?: DBSession,
+  ): Promise<UserDocument> {
+    if (session) {
+      return this.userModel.updateMany(query, update, { session });
+    }
+
+    return this.userModel.updateMany(query, update);
   }
 }

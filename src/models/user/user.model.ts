@@ -3,8 +3,8 @@ import { Model, FilterQuery, SaveOptions } from 'mongoose';
 import { MongoDBConnection } from '@database/mongodb/mongo.database';
 import { USER } from '@constants/index';
 import { User } from '@src/user/interfaces';
-import { UserModel as DBModel } from '../interfaces';
-import { ModelSaveOptions, UserDocument } from './interfaces';
+import { ModelSaveOptions, UserModel as DBModel } from '../interfaces';
+import { UserDocument } from './interfaces';
 import { userSchema } from './user.schema';
 import { replaceID } from '../util';
 
@@ -51,7 +51,7 @@ export class UserModel implements DBModel<User, UserDocument> {
     query: FilterQuery<User>,
     update: Partial<User>,
     options?: ModelSaveOptions,
-  ): Promise<User> {
+  ): Promise<UserDocument> {
     const saveOptions: SaveOptions = {};
     const queryWithReplacedID = replaceID(query);
 
@@ -66,7 +66,7 @@ export class UserModel implements DBModel<User, UserDocument> {
     query: FilterQuery<User>,
     update: Partial<User>,
     options?: ModelSaveOptions,
-  ): Promise<User> {
+  ): Promise<UserDocument> {
     const saveOptions: SaveOptions = {};
     const queryWithReplacedID = replaceID(query);
 

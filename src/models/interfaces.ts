@@ -1,22 +1,33 @@
 import { FilterQuery } from 'mongoose';
 
-export interface DBModel<T, S> {
-  findOne: (query: FilterQuery<T>) => Promise<S>;
-  find: (query: FilterQuery<T>) => Promise<S[]>;
-  create: <A extends T | T[], B>(
-    doc: A,
-    opt?: B,
-  ) => Promise<T extends S ? S : S[]>;
-  updateMany: <A extends T, B>(
-    query: FilterQuery<T>,
-    update: A,
-    opt?: B,
-  ) => Promise<T>;
-  updateOne: <A extends T, B>(
-    query: FilterQuery<T>,
-    update: A,
-    opt?: B,
-  ) => Promise<T>;
+import { SessionManager } from '@database/mongodb/mongo.database';
+import { DBSession } from '@database/interfaces';
+
+export interface ModelSaveOptions {
+  session?: SessionManager;
 }
 
-export type UserModel<T, S> = DBModel<T, S>;
+export interface SaveOptions {
+  session?: DBSession;
+}
+
+export interface DBModel<T, S, K extends SaveOptions> {
+  findOne: (query: FilterQuery<T>) => Promise<S>;
+  find: (query: FilterQuery<T>) => Promise<S[]>;
+  create: <A extends T | T[]>(
+    doc: A,
+    opt?: K,
+  ) => Promise<T extends S ? S : S[]>;
+  updateMany: <A extends T>(
+    query: FilterQuery<T>,
+    update: Partial<A>,
+    opt?: K,
+  ) => Promise<S>;
+  updateOne: <A extends T>(
+    query: FilterQuery<T>,
+    update: Partial<A>,
+    opt?: K,
+  ) => Promise<S>;
+}
+
+export type UserModel<T, S> = DBModel<T, S, SaveOptions>;
