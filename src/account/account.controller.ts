@@ -11,7 +11,7 @@ import {
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { LocalGuard } from '@auth/strategies/local.strategy';
-import { UserDocument, UserObject } from '@user/interfaces';
+import { User } from '@user/interfaces';
 import { JSONResponse, ResponseService } from '@util/response.service';
 import { UserDTO } from '@user/dtos/user.dto';
 import { JWTGuard } from '@auth/strategies/jwt.strategy';
@@ -24,6 +24,7 @@ import {
   AccountUsernameUpdateDTO,
 } from './dtos/account.update.dto';
 import { CurrentUser } from './decorators/current.user.decorator';
+import { LoggedInJSONUser } from './interfaces';
 
 @Controller('accounts')
 @ApiTags('Accounts')
@@ -44,8 +45,8 @@ export class AccountController {
   @Post('login')
   login(
     @Body() _loginDTO: LoginDTO,
-    @CurrentUser() user: UserObject,
-  ): JSONResponse<UserObject> {
+    @CurrentUser() user: LoggedInJSONUser,
+  ): JSONResponse<LoggedInJSONUser> {
     return this.responseService.jsonFormat('Logged in', user);
   }
 
@@ -56,13 +57,12 @@ export class AccountController {
     type: UserDTO,
   })
   @Post('signup')
-  async signup(@Body() userDTO: UserDTO): Promise<JSONResponse<UserObject>> {
+  async signup(
+    @Body() userDTO: UserDTO,
+  ): Promise<JSONResponse<LoggedInJSONUser>> {
     const userObject = await this.accountService.singup(userDTO);
 
-    return this.responseService.jsonFormat<UserObject>(
-      'Account created',
-      userObject,
-    );
+    return this.responseService.jsonFormat('Account created', userObject);
   }
 
   @ApiOperation({
@@ -71,13 +71,8 @@ export class AccountController {
   @ApiBearerAuth()
   @UseGuards(JWTGuard)
   @Get()
-  async accountDetails(
-    @CurrentUser() user: UserDocument,
-  ): Promise<JSONResponse<UserObject>> {
-    return this.responseService.jsonFormat<UserObject>(
-      'Account details',
-      user.toJSON(),
-    );
+  async accountDetails(@CurrentUser() user: User): Promise<JSONResponse<User>> {
+    return this.responseService.jsonFormat('Account details', user);
   }
 
   @ApiOperation({
@@ -90,18 +85,15 @@ export class AccountController {
   @UseGuards(JWTGuard)
   @Put()
   async updateAccountDetails(
-    @CurrentUser() user: UserDocument,
+    @CurrentUser() user: User,
     @Body() accountUpdateDTO: AccountUpdateDTO,
-  ): Promise<JSONResponse<UserObject>> {
+  ): Promise<JSONResponse<User>> {
     const updatedUser = await this.accountService.updateAccountDetails(
       user,
       accountUpdateDTO,
     );
 
-    return this.responseService.jsonFormat(
-      'Account updated',
-      updatedUser.toJSON(),
-    );
+    return this.responseService.jsonFormat('Account updated', updatedUser);
   }
 
   @ApiOperation({
@@ -114,9 +106,9 @@ export class AccountController {
   @UseGuards(JWTGuard)
   @Put('/email')
   async updateAccountEmail(
-    @CurrentUser() user: UserDocument,
+    @CurrentUser() user: User,
     @Body() accountEmailUpdateDTO: AccountEmailUpdateDTO,
-  ): Promise<JSONResponse<UserObject>> {
+  ): Promise<JSONResponse<User>> {
     const updatedUser = await this.accountService.updateAccountEmail(
       user,
       accountEmailUpdateDTO,
@@ -124,7 +116,7 @@ export class AccountController {
 
     return this.responseService.jsonFormat(
       'Account email updated',
-      updatedUser.toJSON(),
+      updatedUser,
     );
   }
 
@@ -138,9 +130,9 @@ export class AccountController {
   @UseGuards(JWTGuard)
   @Put('/username')
   async updateAccountUsername(
-    @CurrentUser() user: UserDocument,
+    @CurrentUser() user: User,
     @Body() accountUsernameUpdateDTO: AccountUsernameUpdateDTO,
-  ): Promise<JSONResponse<UserObject>> {
+  ): Promise<JSONResponse<User>> {
     const updatedUser = await this.accountService.updateAccountUsername(
       user,
       accountUsernameUpdateDTO,
@@ -148,7 +140,7 @@ export class AccountController {
 
     return this.responseService.jsonFormat(
       'Account username updated',
-      updatedUser.toJSON(),
+      updatedUser,
     );
   }
 
@@ -162,9 +154,9 @@ export class AccountController {
   @UseGuards(JWTGuard)
   @Put('/password')
   async updateAccountPassword(
-    @CurrentUser() user: UserDocument,
+    @CurrentUser() user: User,
     @Body() accountPasswordUpdateDTO: AccountPasswordUpdateDTO,
-  ): Promise<JSONResponse<UserObject>> {
+  ): Promise<JSONResponse<LoggedInJSONUser>> {
     const updatedUser = await this.accountService.updateAccountPassword(
       user,
       accountPasswordUpdateDTO,
@@ -172,7 +164,7 @@ export class AccountController {
 
     return this.responseService.jsonFormat(
       'Account password updated',
-      updatedUser.toJSON(),
+      updatedUser,
     );
   }
 }

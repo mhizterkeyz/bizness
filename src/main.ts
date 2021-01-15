@@ -82,6 +82,7 @@ async function bootstrap() {
 
   server.setTimeout(1200000);
 
+  // eslint-disable-next-line no-console
   console.log(`${process.env.NODE_ENV} app running on: ${await app.getUrl()}`);
 }
 bootstrap();

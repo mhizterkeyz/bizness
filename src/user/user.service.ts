@@ -1,24 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { hash, compare } from 'bcryptjs';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Model, ClientSession } from 'mongoose';
 
 import { USER } from '@constants/index';
-import { UserModel } from '@models/interfaces';
-import { DBSession } from '@database/interfaces';
-import configuration from '@src/config/configuration';
+import configuration from '@config/configuration';
 import { UserDTO } from './dtos/user.dto';
-import { User, UserDocument } from './interfaces';
+import { User } from './interfaces';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @Inject(USER) private readonly userModel: UserModel<User, UserDocument>,
-  ) {}
+  constructor(@Inject(USER) private readonly userModel: Model<User>) {}
 
   async createSingleUser(
     userDTO: UserDTO,
-    session: DBSession,
-  ): Promise<UserDocument> {
+    session: ClientSession,
+  ): Promise<User> {
     userDTO.password = await hash(
       userDTO.password,
       configuration().passwordHashSaltRounds,
@@ -28,10 +24,7 @@ export class UserService {
     return user;
   }
 
-  async validateUser(
-    username: string,
-    password: string,
-  ): Promise<UserDocument | null> {
+  async validateUser(username: string, password: string): Promise<User | null> {
     const email = username;
     const user = await this.userModel.findOne({
       $or: [{ username }, { email }],
@@ -46,7 +39,7 @@ export class UserService {
     return user;
   }
 
-  async findSingleUser(fields: FilterQuery<User>): Promise<UserDocument> {
+  async findSingleUser(fields: FilterQuery<User>): Promise<User> {
     return this.userModel.findOne(fields);
   }
 
@@ -59,20 +52,23 @@ export class UserService {
   async updateUser(
     query: FilterQuery<User>,
     update: Partial<User>,
-    session?: DBSession,
-  ): Promise<UserDocument> {
+    session?: ClientSession,
+  ): Promise<User> {
     if (session) {
       return this.userModel.updateOne(query, update, { session });
     }
 
-    return this.userModel.updateOne(query, update);
+    const user = await this.userModel.findOne(query);
+
+    await this.userModel.updateOne(query, update);
+    return this.userModel.findOne({ _id: user.id });
   }
 
   async updateUserPassword(
     _id: string,
     password: string,
-    session?: DBSession,
-  ): Promise<UserDocument> {
+    session?: ClientSession,
+  ): Promise<User> {
     const hashedPassword = await hash(
       password,
       configuration().passwordHashSaltRounds,
@@ -86,6 +82,7 @@ export class UserService {
       );
     }
 
-    return this.userModel.updateOne({ _id }, { password: hashedPassword });
+    await this.userModel.updateOne({ _id }, { password: hashedPassword });
+    return this.userModel.findOne({ _id });
   }
 }

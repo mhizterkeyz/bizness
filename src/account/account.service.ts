@@ -5,11 +5,11 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Connection } from 'mongoose';
 
 import { DB_CONNECTION } from '@constants/index';
-import { DatabaseConnection } from '@database/interfaces';
 import { UserDTO } from '@user/dtos/user.dto';
-import { UserDocument, UserObject } from '@user/interfaces';
+import { User } from '@user/interfaces';
 import { UserService } from '@user/user.service';
 import { AuthService } from '@auth/auth.service';
 import { LoginDTO } from './dtos/login.dto';
@@ -19,27 +19,27 @@ import {
   AccountUpdateDTO,
   AccountUsernameUpdateDTO,
 } from './dtos/account.update.dto';
+import { LoggedInJSONUser } from './interfaces';
 
 @Injectable()
 export class AccountService {
   constructor(
-    @Inject(DB_CONNECTION) private readonly connection: DatabaseConnection,
+    @Inject(DB_CONNECTION) private readonly connection: Connection,
     private readonly userService: UserService,
     private readonly authService: AuthService,
   ) {}
 
-  async singup(userDTO: UserDTO): Promise<UserObject> {
+  async singup(userDTO: UserDTO): Promise<LoggedInJSONUser> {
     const session = await this.connection.startSession();
 
     session.startTransaction();
     try {
       await this.uniqueDetailsOrFail(userDTO);
       const user = await this.userService.createSingleUser(userDTO, session);
-      const userObject = user.toJSON();
-      userObject.accessToken = this.authService.signJWTPayload(
-        user.id,
-        user.password,
-      );
+      const userObject = {
+        ...user.toJSON(),
+        accessToken: this.authService.signJWTPayload(user.id, user.password),
+      };
 
       await session.commitTransaction();
       return userObject;
@@ -51,18 +51,17 @@ export class AccountService {
     }
   }
 
-  async login(loginDTO: LoginDTO): Promise<UserObject | null> {
+  async login(loginDTO: LoginDTO): Promise<LoggedInJSONUser | null> {
     const { username, password } = loginDTO;
 
     const user = await this.userService.validateUser(username, password);
 
     if (!user) return null;
 
-    const userObject = user.toJSON();
-    userObject.accessToken = this.authService.signJWTPayload(
-      user.id,
-      user.password,
-    );
+    const userObject = {
+      ...user.toJSON(),
+      accessToken: this.authService.signJWTPayload(user.id, user.password),
+    };
 
     return userObject;
   }
@@ -79,16 +78,16 @@ export class AccountService {
   }
 
   async updateAccountDetails(
-    user: UserDocument,
+    user: User,
     accountUpdateDTO: AccountUpdateDTO,
-  ): Promise<UserDocument> {
+  ): Promise<User> {
     return this.userService.updateUser({ _id: user.id }, accountUpdateDTO);
   }
 
   async updateAccountEmail(
-    user: UserDocument,
+    user: User,
     accountEmailUpdateDTO: AccountEmailUpdateDTO,
-  ): Promise<UserDocument> {
+  ): Promise<User> {
     const { email, password } = accountEmailUpdateDTO;
     const validatedUser = await this.userService.validateUser(
       user.email,
@@ -104,9 +103,10 @@ export class AccountService {
   }
 
   async updateAccountUsername(
-    user: UserDocument,
+    user: User,
     accountUsernameUpdateDTO: AccountUsernameUpdateDTO,
-  ): Promise<UserDocument> {
+  ): Promise<User> {
+    await this.checkDuplicateUsername(accountUsernameUpdateDTO.username);
     return this.userService.updateUser(
       { _id: user.id },
       accountUsernameUpdateDTO,
@@ -114,9 +114,9 @@ export class AccountService {
   }
 
   async updateAccountPassword(
-    user: UserDocument,
+    user: User,
     accountPasswordUpdateDTO: AccountPasswordUpdateDTO,
-  ): Promise<UserDocument> {
+  ): Promise<LoggedInJSONUser> {
     const {
       oldPassword,
       newPassword,
@@ -136,7 +136,18 @@ export class AccountService {
       throw new UnauthorizedException('wrong old password');
     }
 
-    return this.userService.updateUserPassword(validatedUser.id, newPassword);
+    const updatedUser = await this.userService.updateUserPassword(
+      validatedUser.id,
+      newPassword,
+    );
+
+    return {
+      ...updatedUser.toJSON(),
+      accessToken: this.authService.signJWTPayload(
+        updatedUser.id,
+        updatedUser.password,
+      ),
+    };
   }
 
   async checkDuplicateEmail(email: string): Promise<void> {

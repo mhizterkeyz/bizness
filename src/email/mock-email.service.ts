@@ -2,6 +2,7 @@ import { EmailService, Mail } from './interfaces';
 
 export class MockMailService implements EmailService {
   async sendMail(mail: Mail): Promise<void> {
+    // eslint-disable-next-line no-console
     console.log(
       `
       [Email]\n

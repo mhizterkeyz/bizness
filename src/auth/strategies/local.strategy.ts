@@ -3,7 +3,7 @@ import { AuthGuard, PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 
 import { AccountService } from '@account/account.service';
-import { UserObject } from '@user/interfaces';
+import { LoggedInJSONUser } from '@src/account/interfaces';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -11,7 +11,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super();
   }
 
-  async validate(username: string, password: string): Promise<UserObject> {
+  async validate(
+    username: string,
+    password: string,
+  ): Promise<LoggedInJSONUser> {
     const user = await this.accountService.login({ username, password });
 
     if (!user) {

@@ -1,20 +1,23 @@
 import { Module, Global } from '@nestjs/common';
+import * as mongoose from 'mongoose';
 
-import { DB_CONNECTION } from '@src/constants';
-import { MongoDBConnection } from './mongodb/mongo.database';
-
-const mongoDBProvider = {
-  provide: DB_CONNECTION,
-  useFactory: async (): Promise<MongoDBConnection> => {
-    const dbInstance = new MongoDBConnection();
-    await dbInstance.connect();
-    return dbInstance;
-  },
-};
+import { DB_CONNECTION } from 'constants/index';
+import configuration from '@config/configuration';
 
 @Global()
 @Module({
-  providers: [mongoDBProvider],
-  exports: [mongoDBProvider],
+  providers: [
+    {
+      provide: DB_CONNECTION,
+      useFactory: async (): Promise<typeof mongoose> => {
+        return mongoose.connect(configuration().database.url, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          useCreateIndex: true,
+        });
+      },
+    },
+  ],
+  exports: [DB_CONNECTION],
 })
 export class DatabaseModule {}

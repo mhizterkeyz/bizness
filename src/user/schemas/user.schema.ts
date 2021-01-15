@@ -1,8 +1,6 @@
 import { Schema } from 'mongoose';
 
-import { UserDocument } from './interfaces';
-
-export const userSchema = new Schema<UserDocument>(
+export const userSchema = new Schema(
   {
     name: {
       type: String,

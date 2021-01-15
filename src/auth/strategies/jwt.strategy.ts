@@ -3,7 +3,7 @@ import { AuthGuard, PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import configuration from '@config/configuration';
-import { UserDocument } from '@user/interfaces';
+import { User } from '@user/interfaces';
 import { UserService } from '@user/user.service';
 import { JWTPayload } from '../auth.service';
 
@@ -17,12 +17,16 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(payload: JWTPayload): Promise<UserDocument> {
+  validate(payload: JWTPayload): Promise<User> {
     const {
       sub: { id, password },
     } = payload;
 
-    return this.userService.findSingleUser({ id, password, isDeleted: false });
+    return this.userService.findSingleUser({
+      _id: id,
+      password,
+      isDeleted: false,
+    });
   }
 }
 

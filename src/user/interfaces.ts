@@ -1,20 +1,16 @@
-interface Base {
+import { Document } from 'mongoose';
+
+interface BaseUser {
   name?: string;
   username?: string;
   email: string;
-}
 
-export interface UserObject extends Base {
-  accessToken?: string;
-  isDeleted: boolean;
-  createdAt: string;
-  updatedAt: string;
+  readonly isDeleted: boolean;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
 }
-export interface User extends Base {
+export interface User extends BaseUser, Document {
   password: string;
 }
 
-export interface UserDocument extends User {
-  id: string;
-  toJSON: () => UserObject;
-}
+export type JSONUser = BaseUser;

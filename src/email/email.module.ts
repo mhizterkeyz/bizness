@@ -22,6 +22,7 @@ import { EmailService } from './interfaces';
             selectedMailService = new MockMailService();
         }
 
+        // eslint-disable-next-line no-console
         console.log(message);
         return selectedMailService;
       },
