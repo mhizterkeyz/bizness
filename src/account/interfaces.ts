@@ -1,4 +1,4 @@
-import { JSONUser } from '@src/user/interfaces';
+import { JSONUser } from '@user/interfaces';
 
 export interface LoggedInJSONUser extends JSONUser {
   accessToken: string;

@@ -75,14 +75,15 @@ export class UserService {
     );
 
     if (session) {
-      return this.userModel.updateOne(
+      await this.userModel.updateOne(
         { _id },
         { password: hashedPassword },
         { session },
       );
+    } else {
+      await this.userModel.updateOne({ _id }, { password: hashedPassword });
     }
 
-    await this.userModel.updateOne({ _id }, { password: hashedPassword });
     return this.userModel.findOne({ _id });
   }
 }

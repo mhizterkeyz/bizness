@@ -25,6 +25,10 @@ import {
 } from './dtos/account.update.dto';
 import { CurrentUser } from './decorators/current.user.decorator';
 import { LoggedInJSONUser } from './interfaces';
+import {
+  ForgotPasswordDTO,
+  ResetPasswordDTO,
+} from './dtos/forgot.password.dto';
 
 @Controller('accounts')
 @ApiTags('Accounts')
@@ -166,5 +170,39 @@ export class AccountController {
       'Account password updated',
       updatedUser,
     );
+  }
+
+  @ApiOperation({
+    summary: 'recover forgotten passwor',
+  })
+  @ApiBody({
+    type: ForgotPasswordDTO,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Post('/forgot')
+  async forgotPassword(
+    @Body() forgotPasswordDTO: ForgotPasswordDTO,
+  ): Promise<JSONResponse<undefined>> {
+    await this.accountService.forgotPassword(forgotPasswordDTO);
+
+    return this.responseService.jsonFormat(
+      'Password reset token sent to email.',
+    );
+  }
+
+  @ApiOperation({
+    summary: 'reset account password with reset token',
+  })
+  @ApiBody({
+    type: ResetPasswordDTO,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Post('/reset')
+  async resetPassword(
+    @Body() resetPasswordDTO: ResetPasswordDTO,
+  ): Promise<JSONResponse<LoggedInJSONUser>> {
+    const user = await this.accountService.resetPassword(resetPasswordDTO);
+
+    return this.responseService.jsonFormat('password reset successful', user);
   }
 }

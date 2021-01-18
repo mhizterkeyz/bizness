@@ -11,6 +11,12 @@ export interface Configuration {
     expiresIn: string;
   };
   mailService: string;
+  api: {
+    url: string;
+  };
+  ui: {
+    url: string;
+  };
 }
 
 export default (): Configuration => ({
@@ -26,4 +32,10 @@ export default (): Configuration => ({
     expiresIn: process.env.JWT_EXPIRES_IN,
   },
   mailService: process.env.EMAIL_SERVICE,
+  api: {
+    url: process.env.API_URL,
+  },
+  ui: {
+    url: process.env.UI_URL,
+  },
 });

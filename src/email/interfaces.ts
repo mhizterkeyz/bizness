@@ -12,8 +12,16 @@ export class Mail {
     public to: Address[],
     public subject: string,
     public body: string,
-    public attachments: Attachment[],
+    public attachments?: Attachment[],
     public cc?: Address[],
+  ) {}
+}
+
+export class ForgotPasswordMailPayload {
+  constructor(
+    public resetLink: string,
+    public expiresIn: string,
+    public to: Address,
   ) {}
 }
 

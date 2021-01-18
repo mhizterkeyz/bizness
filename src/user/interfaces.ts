@@ -4,8 +4,8 @@ interface BaseUser {
   name?: string;
   username?: string;
   email: string;
+  isDeleted?: boolean;
 
-  readonly isDeleted: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }

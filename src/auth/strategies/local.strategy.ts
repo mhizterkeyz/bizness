@@ -3,7 +3,7 @@ import { AuthGuard, PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 
 import { AccountService } from '@account/account.service';
-import { LoggedInJSONUser } from '@src/account/interfaces';
+import { LoggedInJSONUser } from '@account/interfaces';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {

@@ -14,19 +14,21 @@ export class MockMailService implements EmailService {
         )
         .join(', ')}\n
         ${
-          mail.cc &&
-          `cc: ${mail.cc
-            .map(
-              (mailTo) =>
-                `${mailTo.name ? `${mailTo.name} ` : ''}<${mailTo.email}>`,
-            )
-            .join(', ')}\n
+          mail.cc
+            ? `cc: ${mail.cc
+                .map(
+                  (mailTo) =>
+                    `${mailTo.name ? `${mailTo.name} ` : ''}<${mailTo.email}>`,
+                )
+                .join(', ')}\n
             `
-        }subject: ${mail.subject}\n
-        body: ${mail.body
-          .replace(/<head>.*<\/head>/gi, '')
-          .replace(/<.+?>/gi, '')}\n
-            attachments: ${mail.attachments.length}
+            : ''
+        }
+      subject: ${mail.subject}\n
+      body: ${mail.body
+        .replace(/<head>.*<\/head>/gi, '')
+        .replace(/<.+?>/gi, '')}\n
+      attachments: ${mail?.attachments?.length}
             `,
     );
   }

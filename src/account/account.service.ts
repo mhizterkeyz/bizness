@@ -6,12 +6,17 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Connection } from 'mongoose';
+import * as momemt from 'moment';
 
 import { DB_CONNECTION } from '@constants/index';
 import { UserDTO } from '@user/dtos/user.dto';
 import { User } from '@user/interfaces';
 import { UserService } from '@user/user.service';
-import { AuthService } from '@auth/auth.service';
+import { AuthService, AuthTokenService } from '@auth/auth.service';
+import { AuthTokenType, TokenCase } from '@auth/interfaces';
+import { AuthTokenDTO } from '@auth/dtos/auth.token.dto';
+import { EmailTemplateService } from '@email/template.service';
+import configuration from '@config/configuration';
 import { LoginDTO } from './dtos/login.dto';
 import {
   AccountEmailUpdateDTO,
@@ -20,6 +25,10 @@ import {
   AccountUsernameUpdateDTO,
 } from './dtos/account.update.dto';
 import { LoggedInJSONUser } from './interfaces';
+import {
+  ForgotPasswordDTO,
+  ResetPasswordDTO,
+} from './dtos/forgot.password.dto';
 
 @Injectable()
 export class AccountService {
@@ -27,6 +36,8 @@ export class AccountService {
     @Inject(DB_CONNECTION) private readonly connection: Connection,
     private readonly userService: UserService,
     private readonly authService: AuthService,
+    private readonly authTokenService: AuthTokenService,
+    private readonly emailTemplateService: EmailTemplateService,
   ) {}
 
   async singup(userDTO: UserDTO): Promise<LoggedInJSONUser> {
@@ -167,6 +178,90 @@ export class AccountService {
 
     if (usernameExists) {
       throw new ConflictException('username already taken');
+    }
+  }
+
+  async forgotPassword(forgotPasswordDTO: ForgotPasswordDTO): Promise<void> {
+    const { email } = forgotPasswordDTO;
+    const user = await this.userService.findSingleUser({ email });
+
+    if (user) {
+      const authTokenDTO: AuthTokenDTO = new AuthTokenDTO(
+        AuthTokenType.FORGOTPASSWORD,
+        momemt().add(5, 'minutes').toDate(),
+        { user: user.id },
+        { case: TokenCase.UpperCase, tokenLength: 5 },
+      );
+
+      const { token } = await this.authTokenService.createSingleAuthToken(
+        authTokenDTO,
+      );
+
+      await this.emailTemplateService.sendForgotPasswordMail({
+        expiresIn: '5 minutes',
+        resetLink: `${configuration().ui.url}/${token}`,
+        to: { email, name: user.name },
+      });
+    }
+  }
+
+  async resetPassword(
+    resetPasswordDTO: ResetPasswordDTO,
+  ): Promise<LoggedInJSONUser> {
+    const session = await this.connection.startSession();
+
+    session.startTransaction();
+    try {
+      const { token, newPassword, confirmNewPassword } = resetPasswordDTO;
+      const passwordsDoNotMatch = newPassword !== confirmNewPassword;
+      const authToken = await this.authTokenService.retrieveAuthToken(
+        token,
+        AuthTokenType.FORGOTPASSWORD,
+        { ignoreExpiry: true },
+      );
+
+      if (!authToken) {
+        throw new UnauthorizedException('invalid password reset token');
+      }
+
+      const tokenExpired = momemt().isAfter(authToken.tokenExpires);
+
+      if (tokenExpired) {
+        throw new BadRequestException('password reset token expired');
+      }
+
+      const user = await this.userService.findSingleUser({
+        _id: (<{ user: string }>authToken.meta).user,
+      });
+
+      if (!user) {
+        throw new UnauthorizedException('invalid password reset token');
+      }
+      if (passwordsDoNotMatch) {
+        throw new BadRequestException('passwords do not match');
+      }
+
+      const updatedUser = await this.userService.updateUserPassword(
+        user.id,
+        newPassword,
+        session,
+      );
+      authToken.blocked = true;
+      await authToken.save({ session });
+
+      await session.commitTransaction();
+      return {
+        ...updatedUser.toJSON(),
+        accessToken: this.authService.signJWTPayload(
+          updatedUser.id,
+          updatedUser.password,
+        ),
+      };
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
     }
   }
 }
