@@ -7,7 +7,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { CoordinatesDTO } from '@src/user/dtos/user.dto';
+import { CoordinatesDTO } from '@user/dtos/user.dto';
 
 export class AccountUpdateDTO {
   @ApiProperty({
