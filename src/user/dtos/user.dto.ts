@@ -1,5 +1,31 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsLatitude,
+  IsLongitude,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+
+export class CoordinatesDTO {
+  @ApiProperty({
+    description: 'coordinate latitude',
+    required: true,
+  })
+  @IsLatitude()
+  @IsNotEmpty()
+  latitude: number;
+
+  @ApiProperty({
+    description: 'coordinate longitude',
+    required: true,
+  })
+  @IsLongitude()
+  @IsNotEmpty()
+  longitude: number;
+}
 
 export class UserDTO {
   @ApiProperty({
@@ -33,4 +59,20 @@ export class UserDTO {
   @IsString()
   @IsNotEmpty()
   password: string;
+
+  @ApiProperty({
+    description: 'user location',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  location?: string;
+
+  @ApiProperty({
+    description: 'user coordinates',
+    required: false,
+  })
+  @ValidateNested()
+  @IsOptional()
+  coordinates?: CoordinatesDTO;
 }

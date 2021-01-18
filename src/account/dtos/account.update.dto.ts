@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+
+import { CoordinatesDTO } from '@src/user/dtos/user.dto';
 
 export class AccountUpdateDTO {
   @ApiProperty({
@@ -9,6 +17,22 @@ export class AccountUpdateDTO {
   @IsString()
   @IsOptional()
   name?: string;
+
+  @ApiProperty({
+    description: 'user location',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  location?: string;
+
+  @ApiProperty({
+    description: 'user coordinates',
+    required: false,
+  })
+  @ValidateNested()
+  @IsOptional()
+  coordinates?: CoordinatesDTO;
 }
 
 export class AccountEmailUpdateDTO {

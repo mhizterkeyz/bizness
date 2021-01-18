@@ -14,6 +14,11 @@ export const userSchema = new Schema(
       type: String,
       required: true,
     },
+    location: String,
+    coordinates: {
+      latitude: Number,
+      longitude: Number,
+    },
     isDeleted: {
       type: Boolean,
       default: false,

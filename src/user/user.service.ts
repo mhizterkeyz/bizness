@@ -54,13 +54,13 @@ export class UserService {
     update: Partial<User>,
     session?: ClientSession,
   ): Promise<User> {
+    const user = await this.userModel.findOne(query);
     if (session) {
-      return this.userModel.updateOne(query, update, { session });
+      await this.userModel.updateOne(query, update, { session });
+    } else {
+      await this.userModel.updateOne(query, update);
     }
 
-    const user = await this.userModel.findOne(query);
-
-    await this.userModel.updateOne(query, update);
     return this.userModel.findOne({ _id: user.id });
   }
 

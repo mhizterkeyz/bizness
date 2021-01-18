@@ -2,6 +2,11 @@ import { Document } from 'mongoose';
 
 interface BaseUser {
   name?: string;
+  location?: string;
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  };
   username?: string;
   email: string;
   isDeleted?: boolean;
