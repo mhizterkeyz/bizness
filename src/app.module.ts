@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { UtilModule } from './util/util.module';
 import { EmailModule } from './email/email.module';
 import { BiznessModule } from './bizness/bizness.module';
+import { UploaderModule } from './uploader/uploader.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { BiznessModule } from './bizness/bizness.module';
     UtilModule,
     EmailModule,
     BiznessModule,
+    UploaderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
