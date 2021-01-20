@@ -55,6 +55,7 @@ export class UserService {
     session?: ClientSession,
   ): Promise<User> {
     const user = await this.userModel.findOne(query);
+
     if (session) {
       await this.userModel.updateOne(query, update, { session });
     } else {

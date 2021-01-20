@@ -1,12 +1,13 @@
 import { Document } from 'mongoose';
 
+export interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
+
 interface BaseUser {
   name?: string;
-  location?: string;
-  coordinates?: {
-    latitude: number;
-    longitude: number;
-  };
+  address?: string;
   username?: string;
   email: string;
   isDeleted?: boolean;
@@ -16,6 +17,9 @@ interface BaseUser {
 }
 export interface User extends BaseUser, Document {
   password: string;
+  coordinates?: Coordinates;
 }
 
-export type JSONUser = BaseUser;
+export interface JSONUser extends BaseUser {
+  id: string;
+}

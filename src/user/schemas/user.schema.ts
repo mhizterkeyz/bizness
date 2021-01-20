@@ -14,7 +14,7 @@ export const userSchema = new Schema(
       type: String,
       required: true,
     },
-    location: String,
+    address: String,
     coordinates: {
       latitude: Number,
       longitude: Number,
@@ -32,6 +32,7 @@ export const userSchema = new Schema(
         delete ret._id;
         delete ret.__v;
         delete ret.password;
+        delete ret.coordinates;
       },
     },
   },

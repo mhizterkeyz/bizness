@@ -19,12 +19,12 @@ export class AccountUpdateDTO {
   name?: string;
 
   @ApiProperty({
-    description: 'user location',
+    description: 'user address',
     required: false,
   })
   @IsString()
   @IsOptional()
-  location?: string;
+  address?: string;
 
   @ApiProperty({
     description: 'user coordinates',

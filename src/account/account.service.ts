@@ -47,7 +47,7 @@ export class AccountService {
     try {
       await this.uniqueDetailsOrFail(userDTO);
       const user = await this.userService.createSingleUser(userDTO, session);
-      const userObject = {
+      const userObject = <LoggedInJSONUser>{
         ...user.toJSON(),
         accessToken: this.authService.signJWTPayload(user.id, user.password),
       };
@@ -69,7 +69,7 @@ export class AccountService {
 
     if (!user) return null;
 
-    const userObject = {
+    const userObject = <LoggedInJSONUser>{
       ...user.toJSON(),
       accessToken: this.authService.signJWTPayload(user.id, user.password),
     };
@@ -152,7 +152,7 @@ export class AccountService {
       newPassword,
     );
 
-    return {
+    return <LoggedInJSONUser>{
       ...updatedUser.toJSON(),
       accessToken: this.authService.signJWTPayload(
         updatedUser.id,
@@ -250,7 +250,7 @@ export class AccountService {
       await authToken.save({ session });
 
       await session.commitTransaction();
-      return {
+      return <LoggedInJSONUser>{
         ...updatedUser.toJSON(),
         accessToken: this.authService.signJWTPayload(
           updatedUser.id,
