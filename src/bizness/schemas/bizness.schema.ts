@@ -22,6 +22,10 @@ export const biznessSchema = new Schema(
       type: coordinatesSchema,
       required: true,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

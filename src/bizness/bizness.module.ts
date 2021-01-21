@@ -2,10 +2,13 @@ import { Module } from '@nestjs/common';
 import { Connection, Model } from 'mongoose';
 
 import { BIZNESS, DB_CONNECTION } from '@constants/index';
+import { UtilModule } from '@src/util/util.module';
 import { Bizness } from './interfaces';
 import { biznessSchema } from './schemas/bizness.schema';
+import { BiznessService } from './bizness.service';
 
 @Module({
+  imports: [UtilModule],
   providers: [
     {
       provide: BIZNESS,
@@ -17,6 +20,8 @@ import { biznessSchema } from './schemas/bizness.schema';
         return model;
       },
     },
+    BiznessService,
   ],
+  exports: [BiznessService],
 })
 export class BiznessModule {}

@@ -5,6 +5,7 @@ import { Coordinates, JSONUser, User } from '@user/interfaces';
 interface BaseBizness {
   name: string;
   address: string;
+  isDeleted?: boolean;
 }
 
 export interface Bizness extends BaseBizness, Document {
