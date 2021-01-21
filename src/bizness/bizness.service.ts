@@ -4,10 +4,7 @@ import { isEmpty } from 'lodash';
 
 import { BIZNESS } from '@constants/index';
 import { User } from '@user/interfaces';
-import {
-  PaginationResult,
-  PaginationService,
-} from '@src/util/pagination.service';
+import { PaginationResult, PaginationService } from '@util/pagination.service';
 import { Bizness } from './interfaces';
 import { BiznessDTO, ListUserBiznessDTO } from './dtos/bizness.dto';
 
