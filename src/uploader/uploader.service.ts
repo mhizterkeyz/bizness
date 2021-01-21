@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { getExtension } from 'mime';
 
-import { UPLOADER } from '@src/constants';
+import { UPLOADER } from '@constants/index';
 import { Uploader } from './uploader.interface';
 import { FileUploadDTO } from './dto';
 import { UploadedResource } from './interfaces';

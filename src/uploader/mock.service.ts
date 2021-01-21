@@ -3,7 +3,7 @@ import { HttpAdapterHost } from '@nestjs/core';
 import { readFile, writeFile } from 'fs';
 import { join } from 'path';
 
-import configuration from '@src/config/configuration';
+import configuration from '@config/configuration';
 import { Uploader } from './uploader.interface';
 import { FileUpload } from './interfaces';
 

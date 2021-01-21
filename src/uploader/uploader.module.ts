@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 
-import { UPLOADER } from '@src/constants';
+import { UPLOADER } from '@constants/index';
 import { MockService } from './mock.service';
 import { Uploader } from './uploader.interface';
 import { UploadService } from './uploader.service';

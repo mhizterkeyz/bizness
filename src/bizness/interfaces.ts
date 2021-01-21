@@ -1,3 +1,5 @@
+import { Document } from 'mongoose';
+
 import { Coordinates, JSONUser, User } from '@user/interfaces';
 
 interface BaseBizness {

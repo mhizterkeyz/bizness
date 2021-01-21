@@ -1,5 +1,19 @@
 import { Schema } from 'mongoose';
 
+export const coordinatesSchema = new Schema(
+  {
+    latitude: {
+      type: Number,
+      required: true,
+    },
+    longitude: {
+      type: Number,
+      required: true,
+    },
+  },
+  { _id: false },
+);
+
 export const userSchema = new Schema(
   {
     name: {
@@ -15,10 +29,7 @@ export const userSchema = new Schema(
       required: true,
     },
     address: String,
-    coordinates: {
-      latitude: Number,
-      longitude: Number,
-    },
+    coordinates: coordinatesSchema,
     isDeleted: {
       type: Boolean,
       default: false,
