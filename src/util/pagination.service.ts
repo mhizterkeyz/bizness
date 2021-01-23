@@ -113,8 +113,8 @@ export class PaginationService {
     };
   }
 
-  async aggregatePaginate<T>(
-    model: Model<Document>,
+  async aggregatePaginate<T, K extends Document>(
+    model: Model<K>,
     criteria: any[],
     { page = 1, limit = 10 }: PaginationDTO,
   ): Promise<AggregatePaginationResult<T>> {

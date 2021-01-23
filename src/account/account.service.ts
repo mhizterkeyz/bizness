@@ -92,7 +92,10 @@ export class AccountService {
     user: User,
     accountUpdateDTO: AccountUpdateDTO,
   ): Promise<User> {
-    return this.userService.updateUser({ _id: user.id }, accountUpdateDTO);
+    const { addressUpdateDTO, ...regular } = accountUpdateDTO;
+    const payload = { ...addressUpdateDTO, ...regular };
+
+    return this.userService.updateUser({ _id: user.id }, payload);
   }
 
   async updateAccountEmail(

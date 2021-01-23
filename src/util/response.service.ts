@@ -11,7 +11,7 @@ export class PaginationMetaData {
   @ApiProperty({
     description: 'Results per page',
   })
-  perPage: number;
+  limit: number;
 
   @ApiProperty({
     description: 'Total resource on server',

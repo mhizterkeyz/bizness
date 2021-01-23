@@ -27,6 +27,24 @@ export class CoordinatesDTO {
   longitude: number;
 }
 
+export class AddressUpdateDTO {
+  @ApiProperty({
+    description: 'bizness address',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  address: string;
+
+  @ApiProperty({
+    description: 'bizness coordinates',
+    required: true,
+  })
+  @ValidateNested()
+  @IsNotEmpty()
+  coordinates: CoordinatesDTO;
+}
+
 export class UserDTO {
   @ApiProperty({
     description: 'fullname of user',
@@ -61,18 +79,10 @@ export class UserDTO {
   password: string;
 
   @ApiProperty({
-    description: 'user address',
-    required: false,
-  })
-  @IsString()
-  @IsOptional()
-  address?: string;
-
-  @ApiProperty({
-    description: 'user coordinates',
+    description: 'user address details',
     required: false,
   })
   @ValidateNested()
   @IsOptional()
-  coordinates?: CoordinatesDTO;
+  addressUpdateDTO?: AddressUpdateDTO;
 }

@@ -1,7 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import {
+  IsLatitude,
+  IsLongitude,
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 
-import { CoordinatesDTO } from '@user/dtos/user.dto';
+import { AddressUpdateDTO, CoordinatesDTO } from '@user/dtos/user.dto';
 import { PaginationDTO } from '@util/pagination.service';
 
 export class BiznessDTO {
@@ -30,12 +41,65 @@ export class BiznessDTO {
   coordinates: CoordinatesDTO;
 }
 
+export class UpdateBiznessDTO {
+  @ApiProperty({
+    description: 'bizness name',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @ApiProperty({
+    description: 'bizness address details',
+    required: false,
+  })
+  @ValidateNested()
+  @IsOptional()
+  addressUpdateDTO?: AddressUpdateDTO;
+}
+
 export class ListUserBiznessDTO extends PaginationDTO {
   @ApiProperty({
     description: 'search query',
     required: false,
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   search?: string;
+}
+
+export class ListBiznessDTO extends ListUserBiznessDTO {
+  @ApiProperty({
+    description: 'locality latitude',
+    required: false,
+  })
+  @IsLatitude()
+  @IsOptional()
+  latitude?: number;
+
+  @ApiProperty({
+    description: 'locality longitude',
+    required: false,
+  })
+  @IsLongitude()
+  @IsOptional()
+  longitude?: number;
+}
+
+export class RateBiznessDTO {
+  @ApiProperty({
+    description: 'rating from 0 - 5',
+    required: true,
+  })
+  @IsNumber()
+  @Min(0)
+  @Max(5)
+  rating: number;
+}
+
+export class RouteIDDTO {
+  @IsMongoId()
+  @IsNotEmpty()
+  id: string;
 }

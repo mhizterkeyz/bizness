@@ -7,7 +7,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { CoordinatesDTO } from '@user/dtos/user.dto';
+import { AddressUpdateDTO } from '@user/dtos/user.dto';
 
 export class AccountUpdateDTO {
   @ApiProperty({
@@ -19,20 +19,12 @@ export class AccountUpdateDTO {
   name?: string;
 
   @ApiProperty({
-    description: 'user address',
-    required: false,
-  })
-  @IsString()
-  @IsOptional()
-  address?: string;
-
-  @ApiProperty({
-    description: 'user coordinates',
+    description: 'user address details',
     required: false,
   })
   @ValidateNested()
   @IsOptional()
-  coordinates?: CoordinatesDTO;
+  addressUpdateDTO: AddressUpdateDTO;
 }
 
 export class AccountEmailUpdateDTO {

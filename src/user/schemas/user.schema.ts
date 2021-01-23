@@ -44,6 +44,7 @@ export const userSchema = new Schema(
         delete ret.__v;
         delete ret.password;
         delete ret.coordinates;
+        delete ret.isDeleted;
       },
     },
   },

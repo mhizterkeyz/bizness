@@ -15,11 +15,16 @@ export class UserService {
     userDTO: UserDTO,
     session: ClientSession,
   ): Promise<User> {
-    userDTO.password = await hash(
-      userDTO.password,
-      configuration().passwordHashSaltRounds,
-    );
-    const [user] = await this.userModel.create([userDTO], { session });
+    const { addressUpdateDTO, ...regular } = userDTO;
+    const payload = {
+      ...regular,
+      ...addressUpdateDTO,
+      password: await hash(
+        userDTO.password,
+        configuration().passwordHashSaltRounds,
+      ),
+    };
+    const [user] = await this.userModel.create([payload], { session });
 
     return user;
   }

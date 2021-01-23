@@ -10,7 +10,6 @@ interface BaseUser {
   address?: string;
   username?: string;
   email: string;
-  isDeleted?: boolean;
 
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -18,6 +17,7 @@ interface BaseUser {
 export interface User extends BaseUser, Document {
   password: string;
   coordinates?: Coordinates;
+  isDeleted?: boolean;
 }
 
 export interface JSONUser extends BaseUser {

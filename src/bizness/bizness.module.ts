@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { Connection, Model } from 'mongoose';
 
-import { BIZNESS, DB_CONNECTION } from '@constants/index';
+import { BIZNESS, BIZNESSRATING, DB_CONNECTION } from '@constants/index';
 import { UtilModule } from '@util/util.module';
-import { Bizness } from './interfaces';
-import { biznessSchema } from './schemas/bizness.schema';
+import { Bizness, BiznessRating } from './interfaces';
+import { biznessRatingsSchema, biznessSchema } from './schemas/bizness.schema';
 import { BiznessService } from './bizness.service';
+import { BiznessController } from './bizness.controller';
 
 @Module({
   imports: [UtilModule],
@@ -20,8 +21,22 @@ import { BiznessService } from './bizness.service';
         return model;
       },
     },
+    {
+      provide: BIZNESSRATING,
+      inject: [DB_CONNECTION],
+      async useFactory(connection: Connection): Promise<Model<BiznessRating>> {
+        const model = connection.model<BiznessRating>(
+          BIZNESSRATING,
+          biznessRatingsSchema,
+        );
+
+        await model.createCollection();
+        return model;
+      },
+    },
     BiznessService,
   ],
   exports: [BiznessService],
+  controllers: [BiznessController],
 })
 export class BiznessModule {}
