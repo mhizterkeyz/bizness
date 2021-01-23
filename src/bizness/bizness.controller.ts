@@ -48,7 +48,6 @@ export class BiznessController {
     @CurrentUser() user: User,
     @Body() biznessDTO: BiznessDTO,
   ): Promise<JSONResponse<Bizness>> {
-    console.log(user.email);
     const bizness = await this.biznessService.createSingleBizness(
       user,
       biznessDTO,
@@ -78,7 +77,6 @@ export class BiznessController {
     @CurrentUser() user: User,
     @Query() listBiznessDTO: ListUserBiznessDTO,
   ): Promise<JSONResponse<JSONBizness[]>> {
-    console.log(user.email);
     const { data, metadata } = await this.biznessService.listUserBizness(
       user,
       listBiznessDTO,
