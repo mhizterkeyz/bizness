@@ -62,8 +62,9 @@ export class BiznessService {
     listUserBiznessDTO: ListUserBiznessDTO,
   ): Promise<AggregatePaginationResult<JSONBizness>> {
     const { search = '', page = 1, limit = 10 } = listUserBiznessDTO;
+    const _id: unknown = Types.ObjectId(user.id);
     const $match: FilterQuery<Bizness> = {
-      owner: user.id,
+      owner: _id,
     };
     const aggregation = listUserBiznessAggregation($match, search);
 
