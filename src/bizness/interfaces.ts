@@ -33,3 +33,11 @@ export interface JSONBizness extends BaseBizness {
   id: string;
   owner: string | JSONUser;
 }
+
+export enum BiznessListSortBy {
+  Rating = 'rating',
+  Distance = 'distance',
+  DateCreated = 'createdAt',
+}
+
+export const BiznessListSortBys = Object.values(BiznessListSortBy);

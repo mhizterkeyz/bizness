@@ -3,7 +3,7 @@ import * as pluralize from 'mongoose-legacy-pluralize';
 import { isEmpty, merge } from 'lodash';
 import { BIZNESSRATING, USER } from '@constants/index';
 import { Coordinates } from '@user/interfaces';
-import { Bizness } from './interfaces';
+import { Bizness, BiznessListSortBy } from './interfaces';
 
 export interface AggregationCoordinates {
   longitude: string | number;
@@ -59,6 +59,7 @@ export const listUserBiznessAggregation = (
   $match: FilterQuery<Bizness>,
   search?: string,
   coordinates?: Coordinates,
+  sortBy?: string,
 ): any[] => {
   const aggregate = [];
   const projectStage: any = {
@@ -82,11 +83,11 @@ export const listUserBiznessAggregation = (
       updatedAt: 1,
     },
   };
-  let sortStage: any = {
+  let sortStage = {
     $sort: {
       rating: -1,
       createdAt: -1,
-      name: 1,
+      distance: 1,
     },
   };
 
@@ -98,14 +99,6 @@ export const listUserBiznessAggregation = (
     merge($match, { $or: [{ name: regexQuery }, { address: regexQuery }] });
   }
   if (!isEmpty(coordinates)) {
-    sortStage = {
-      $sort: {
-        distance: 1,
-        rating: -1,
-        createdAt: 1,
-        name: 1,
-      },
-    };
     projectStage.$project.distance = 1;
     aggregate.push({
       $addFields: {
@@ -116,11 +109,39 @@ export const listUserBiznessAggregation = (
       },
     });
   }
+  if (!isEmpty(sortBy)) {
+    if (sortBy === BiznessListSortBy.DateCreated) {
+      sortStage = {
+        $sort: {
+          createdAt: -1,
+          distance: 1,
+          rating: -1,
+        },
+      };
+    }
+    if (sortBy === BiznessListSortBy.Distance) {
+      sortStage = {
+        $sort: {
+          distance: 1,
+          rating: -1,
+          createdAt: -1,
+        },
+      };
+    }
+    if (sortBy === BiznessListSortBy.Rating) {
+      sortStage = {
+        $sort: {
+          rating: -1,
+          distance: 1,
+          createdAt: -1,
+        },
+      };
+    }
+  }
 
   aggregate.push(
     ...[
       { $match },
-      { $sort: { createdAt: -1 } },
       {
         $lookup: {
           from: pluralize(BIZNESSRATING),

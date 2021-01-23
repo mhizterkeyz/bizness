@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsIn,
   IsLatitude,
   IsLongitude,
   IsMongoId,
@@ -14,6 +15,7 @@ import {
 
 import { AddressUpdateDTO, CoordinatesDTO } from '@user/dtos/user.dto';
 import { PaginationDTO } from '@util/pagination.service';
+import { BiznessListSortBy, BiznessListSortBys } from '../interfaces';
 
 export class BiznessDTO {
   @ApiProperty({
@@ -67,6 +69,14 @@ export class ListUserBiznessDTO extends PaginationDTO {
   @IsString()
   @IsOptional()
   search?: string;
+
+  @ApiProperty({
+    description: 'sort bizness list by - rating, distance or createdAt',
+    required: false,
+  })
+  @IsIn(BiznessListSortBys)
+  @IsOptional()
+  sortBy?: BiznessListSortBy;
 }
 
 export class ListBiznessDTO extends ListUserBiznessDTO {
