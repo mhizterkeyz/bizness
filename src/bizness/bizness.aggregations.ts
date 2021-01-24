@@ -162,15 +162,20 @@ export const listUserBiznessAggregation = (
       {
         $addFields: {
           rating: {
-            $divide: [
-              { $sum: '$rating.rating' },
+            $trunc: [
               {
-                $cond: [
-                  { $gt: [{ $size: '$rating' }, 0] },
-                  { $size: '$rating' },
-                  1,
+                $divide: [
+                  { $sum: '$rating.rating' },
+                  {
+                    $cond: [
+                      { $gt: [{ $size: '$rating' }, 0] },
+                      { $size: '$rating' },
+                      1,
+                    ],
+                  },
                 ],
               },
+              0,
             ],
           },
         },
