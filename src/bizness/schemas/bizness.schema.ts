@@ -58,6 +58,10 @@ export const biznessRatingsSchema = new Schema(
       required: true,
       ref: BIZNESS,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
