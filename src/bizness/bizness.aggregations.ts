@@ -2,7 +2,7 @@ import { FilterQuery } from 'mongoose';
 import * as pluralize from 'mongoose-legacy-pluralize';
 import { isEmpty, merge } from 'lodash';
 import { BIZNESSRATING, USER } from '@constants/index';
-import { Coordinates } from '@user/interfaces';
+import { Coordinates } from '@src/common/interfaces';
 import { Bizness, BiznessListSortBy } from './interfaces';
 
 export interface AggregationCoordinates {

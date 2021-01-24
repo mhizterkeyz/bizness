@@ -1,6 +1,7 @@
 import { Document } from 'mongoose';
 
-import { Coordinates, JSONUser, User } from '@user/interfaces';
+import { JSONUser, User } from '@user/interfaces';
+import { Coordinates } from '@src/common/interfaces';
 
 interface BaseBizness {
   name: string;

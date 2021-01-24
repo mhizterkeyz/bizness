@@ -26,7 +26,8 @@
       "@util/*": ["util/*"],
       "@email/*": ["email/*"],
       "@bizness/*": ["bizness/*"],
-      "@uploader/*": ["uploader/*"]
+      "@uploader/*": ["uploader/*"],
+      "@common/*": ["common/*"]
     }
   },
   "include": ["./src/**/*", "./test/**/*"]

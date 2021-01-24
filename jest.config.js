@@ -23,5 +23,6 @@ module.exports = {
     '@email/(.*)': '<rootDir>/email/$1',
     '@bizness/(.*)': '<rootDir>/bizness/$1',
     '@uploader/(.*)': '<rootDir>/uploader/$1',
+    '@common/(.*)': '<rootDir>/common/$1',
   },
 };

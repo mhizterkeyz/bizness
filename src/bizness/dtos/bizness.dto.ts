@@ -13,7 +13,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { AddressUpdateDTO, CoordinatesDTO } from '@user/dtos/user.dto';
+import { AddressUpdateDTO, CoordinatesDTO } from '@src/common/dtos';
 import { PaginationDTO } from '@util/pagination.service';
 import { BiznessListSortBy, BiznessListSortBys } from '../interfaces';
 

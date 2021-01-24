@@ -7,7 +7,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { AddressUpdateDTO } from '@user/dtos/user.dto';
+import { AddressUpdateDTO } from '@src/common/dtos';
 
 export class AccountUpdateDTO {
   @ApiProperty({

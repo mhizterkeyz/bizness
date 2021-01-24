@@ -1,49 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
-  IsLatitude,
-  IsLongitude,
   IsNotEmpty,
   IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
 
-export class CoordinatesDTO {
-  @ApiProperty({
-    description: 'coordinate latitude',
-    required: true,
-  })
-  @IsLatitude()
-  @IsNotEmpty()
-  latitude: number;
-
-  @ApiProperty({
-    description: 'coordinate longitude',
-    required: true,
-  })
-  @IsLongitude()
-  @IsNotEmpty()
-  longitude: number;
-}
-
-export class AddressUpdateDTO {
-  @ApiProperty({
-    description: 'bizness address',
-    required: true,
-  })
-  @IsString()
-  @IsNotEmpty()
-  address: string;
-
-  @ApiProperty({
-    description: 'bizness coordinates',
-    required: true,
-  })
-  @ValidateNested()
-  @IsNotEmpty()
-  coordinates: CoordinatesDTO;
-}
+import { AddressUpdateDTO } from '@src/common/dtos';
 
 export class UserDTO {
   @ApiProperty({

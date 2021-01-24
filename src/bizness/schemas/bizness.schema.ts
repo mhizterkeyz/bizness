@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose';
 
 import { BIZNESS, USER } from '@constants/index';
-import { coordinatesSchema } from '@user/schemas/user.schema';
+import { coordinatesSchema } from '@src/common/schemas';
 
 export const biznessSchema = new Schema(
   {

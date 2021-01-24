@@ -1,9 +1,5 @@
 import { Document } from 'mongoose';
-
-export interface Coordinates {
-  latitude: number;
-  longitude: number;
-}
+import { Coordinates } from '@src/common/interfaces';
 
 interface BaseUser {
   name?: string;

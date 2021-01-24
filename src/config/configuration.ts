@@ -1,5 +1,7 @@
+import { ENV, ENVs } from '@src/common/interfaces';
+
 export interface Configuration {
-  env: string;
+  env: ENV;
   port: number;
   isTest: boolean;
   database: {
@@ -20,7 +22,9 @@ export interface Configuration {
 }
 
 export default (): Configuration => ({
-  env: process.env.NODE_ENV,
+  env: ENVs.includes(<ENV>process.env.NODE_ENV)
+    ? <ENV>process.env.NODE_ENV
+    : ENV.Development,
   port: parseInt(process.env.PORT, 10) || 3000,
   isTest: process.env.NODE_ENV === 'test',
   database: {

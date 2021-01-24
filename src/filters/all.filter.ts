@@ -5,7 +5,8 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import configuration from '@src/config/configuration';
+import configuration from '@config/configuration';
+import { ENV } from '@src/common/interfaces';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -20,7 +21,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
     const { message } = exception;
-    if (configuration().env === 'development') {
+    if (configuration().env === ENV.Development) {
       // eslint-disable-next-line no-console
       console.log({ message, stackTrace: exception.stack });
     }
