@@ -61,17 +61,12 @@ export class BiznessService {
     user: User,
     listUserBiznessDTO: ListUserBiznessDTO,
   ): Promise<AggregatePaginationResult<JSONBizness>> {
-    const { search = '', page = 1, limit = 10, sortBy } = listUserBiznessDTO;
+    const { search = '', page = 1, limit = 10 } = listUserBiznessDTO;
     const _id: unknown = Types.ObjectId(user.id);
     const $match: FilterQuery<Bizness> = {
       owner: _id,
     };
-    const aggregation = listUserBiznessAggregation(
-      $match,
-      search,
-      null,
-      sortBy,
-    );
+    const aggregation = listUserBiznessAggregation($match, search);
 
     return this.paginationService.aggregatePaginate<JSONBizness, Bizness>(
       this.biznessModel,
@@ -92,7 +87,7 @@ export class BiznessService {
       limit = 10,
       latitude,
       longitude,
-      sortBy,
+      distance,
     } = listBiznessDTO;
     let coordinates = null;
     if (latitude && longitude) {
@@ -102,7 +97,7 @@ export class BiznessService {
       {},
       search,
       coordinates,
-      sortBy,
+      distance,
     );
 
     return this.paginationService.aggregatePaginate<JSONBizness, Bizness>(

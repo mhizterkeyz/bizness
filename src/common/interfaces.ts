@@ -3,6 +3,11 @@ export interface Coordinates {
   longitude: number;
 }
 
+export interface AggregationCoordinates {
+  longitude: string | number;
+  latitude: string | number;
+}
+
 export enum ENV {
   Development = 'development',
   Testing = 'testing',
