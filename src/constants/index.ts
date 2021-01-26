@@ -5,3 +5,5 @@ export const AUTHTOKEN = 'AUTHTOKEN';
 export const BIZNESS = 'BIZNESS';
 export const UPLOADER = 'UPLOADER';
 export const BIZNESSRATING = 'BIZNESSRATING';
+export const LISTING = 'LISTING';
+export const LISTINGRATING = 'LISTINGRATING';

@@ -24,5 +24,6 @@ module.exports = {
     '@bizness/(.*)': '<rootDir>/bizness/$1',
     '@uploader/(.*)': '<rootDir>/uploader/$1',
     '@common/(.*)': '<rootDir>/common/$1',
+    '@listing/(.*)': '<rootDir>/listing/$1',
   },
 };

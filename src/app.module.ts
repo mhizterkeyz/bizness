@@ -12,6 +12,7 @@ import { UtilModule } from './util/util.module';
 import { EmailModule } from './email/email.module';
 import { BiznessModule } from './bizness/bizness.module';
 import { UploaderModule } from './uploader/uploader.module';
+import { ListingModule } from './listing/listing.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UploaderModule } from './uploader/uploader.module';
     EmailModule,
     BiznessModule,
     UploaderModule,
+    ListingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
