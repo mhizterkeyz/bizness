@@ -3,7 +3,10 @@ import * as pluralize from 'mongoose-legacy-pluralize';
 import { isEmpty, merge } from 'lodash';
 import { BIZNESSRATING, USER } from '@constants/index';
 import { Coordinates } from '@src/common/interfaces';
-import { getDistanceAggregation } from '@common/aggregations';
+import {
+  getDistanceAggregation,
+  getRatingAggregation,
+} from '@common/aggregations';
 import { Bizness } from './interfaces';
 
 export const listUserBiznessAggregation = (
@@ -55,27 +58,7 @@ export const listUserBiznessAggregation = (
         },
       },
       { $unwind: { path: '$owner' } },
-      {
-        $addFields: {
-          rating: {
-            $trunc: [
-              {
-                $divide: [
-                  { $sum: '$rating.rating' },
-                  {
-                    $cond: [
-                      { $gt: [{ $size: '$rating' }, 0] },
-                      { $size: '$rating' },
-                      1,
-                    ],
-                  },
-                ],
-              },
-              0,
-            ],
-          },
-        },
-      },
+      getRatingAggregation(),
       {
         $sort: {
           rating: -1,

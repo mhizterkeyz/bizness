@@ -50,3 +50,27 @@ export const getDistanceAggregation = (
     ],
   };
 };
+
+export const getRatingAggregation = (): Record<string, unknown> => {
+  return {
+    $addFields: {
+      rating: {
+        $trunc: [
+          {
+            $divide: [
+              { $sum: '$rating.rating' },
+              {
+                $cond: [
+                  { $gt: [{ $size: '$rating' }, 0] },
+                  { $size: '$rating' },
+                  1,
+                ],
+              },
+            ],
+          },
+          0,
+        ],
+      },
+    },
+  };
+};

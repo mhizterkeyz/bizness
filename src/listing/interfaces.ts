@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-import { Bizness } from '@bizness/interfaces';
+import { Bizness, JSONBizness } from '@bizness/interfaces';
 import { Rating } from '@common/interfaces';
 
 interface BaseListing {
@@ -21,7 +21,7 @@ export interface ListingRating extends Rating {
   listing: string | Listing;
 }
 
-export interface JSONBizness extends BaseListing {
+export interface JSONListing extends BaseListing {
   id: string;
   bizness: string | JSONBizness;
 }
