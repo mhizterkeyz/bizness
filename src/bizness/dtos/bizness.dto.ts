@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsLatitude,
   IsLongitude,
-  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -94,9 +93,3 @@ export class ListBiznessDTO extends ListUserBiznessDTO {
 }
 
 export class RateBiznessDTO extends RateDTO {}
-
-export class RouteIDDTO {
-  @IsMongoId()
-  @IsNotEmpty()
-  id: string;
-}

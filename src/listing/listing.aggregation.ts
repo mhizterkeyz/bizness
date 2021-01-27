@@ -3,7 +3,7 @@ import * as pluralize from 'mongoose-legacy-pluralize';
 import { isEmpty } from 'lodash';
 
 import { Coordinates } from '@common/interfaces';
-import { LISTING, LISTINGRATING } from '@constants/index';
+import { BIZNESS, LISTINGRATING } from '@constants/index';
 import {
   getDistanceAggregation,
   getRatingAggregation,
@@ -22,7 +22,7 @@ export const getListingAggregation = (
     { $match },
     {
       $lookup: {
-        from: pluralize(LISTING),
+        from: pluralize(BIZNESS),
         localField: 'bizness',
         foreignField: '_id',
         as: 'bizness',
@@ -76,7 +76,7 @@ export const getListingAggregation = (
     },
     {
       $project: {
-        _id: null,
+        _id: 0,
         id: '$_id',
         name: 1,
         image: 1,

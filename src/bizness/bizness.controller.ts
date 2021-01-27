@@ -21,13 +21,19 @@ import { JWTGuard } from '@auth/strategies/jwt.strategy';
 import { JSONResponse, ResponseService } from '@util/response.service';
 import { CurrentUser } from '@account/decorators/current.user.decorator';
 import { User } from '@user/interfaces';
+import {
+  GetUserListingsDTO,
+  ListingDTO,
+  UpdateListingDTO,
+} from '@src/listing/dtos/listing.dto';
+import { RouteIDDTO, TwoRouteIDDTO } from '@common/dtos';
+import { JSONListing, Listing } from '@src/listing/interfaces';
 import { BiznessService } from './bizness.service';
 import {
   BiznessDTO,
   ListBiznessDTO,
   ListUserBiznessDTO,
   RateBiznessDTO,
-  RouteIDDTO,
   UpdateBiznessDTO,
 } from './dtos/bizness.dto';
 import { Bizness, BiznessRating, JSONBizness } from './interfaces';
@@ -121,6 +127,101 @@ export class BiznessController {
     );
 
     return this.responseService.jsonFormat('bizness rated', bizness);
+  }
+
+  @ApiOperation({ summary: 'Create bizness listing' })
+  @ApiParam({
+    name: 'biznessID',
+    required: true,
+  })
+  @ApiBody({ type: ListingDTO })
+  @UseGuards(JWTGuard)
+  @Post(':id/listings')
+  async createListing(
+    @CurrentUser() user: User,
+    @Param() { id }: RouteIDDTO,
+    @Body() listingDTO: ListingDTO,
+  ): Promise<JSONResponse<Listing>> {
+    const listing = await this.biznessService.createBiznessListing(
+      user,
+      id,
+      listingDTO,
+    );
+
+    return this.responseService.jsonFormat('Bizness listing created', listing);
+  }
+
+  @ApiOperation({ summary: 'Get bizness listings' })
+  @ApiParam({
+    name: 'biznessID',
+    required: true,
+  })
+  @ApiQuery({ type: GetUserListingsDTO })
+  @UseGuards(JWTGuard)
+  @Get(':id/listings')
+  async getListings(
+    @CurrentUser() user: User,
+    @Param() { id }: RouteIDDTO,
+    @Query() getUserListingsDTO: GetUserListingsDTO,
+  ): Promise<JSONResponse<JSONListing[]>> {
+    const { data, metadata } = await this.biznessService.getBiznessListing(
+      user,
+      id,
+      getUserListingsDTO,
+    );
+
+    return this.responseService.jsonFormat('Bizness listings', data, metadata);
+  }
+
+  @ApiOperation({ summary: 'Update bizness listings' })
+  @ApiParam({
+    name: 'biznessID',
+    required: true,
+  })
+  @ApiParam({
+    name: 'listingID',
+    required: true,
+  })
+  @ApiBody({ type: UpdateListingDTO })
+  @UseGuards(JWTGuard)
+  @Put(':id1/listings/:id2')
+  async updateListing(
+    @CurrentUser() user: User,
+    @Param() { id1, id2 }: TwoRouteIDDTO,
+    @Body() updateListingDTO: UpdateListingDTO,
+  ): Promise<JSONResponse<JSONListing>> {
+    const listing = await this.biznessService.updateBiznessListing(
+      user,
+      id1,
+      id2,
+      updateListingDTO,
+    );
+
+    return this.responseService.jsonFormat('Bizness listing updated', listing);
+  }
+
+  @ApiOperation({ summary: 'Delete bizness listings' })
+  @ApiParam({
+    name: 'biznessID',
+    required: true,
+  })
+  @ApiParam({
+    name: 'listingID',
+    required: true,
+  })
+  @UseGuards(JWTGuard)
+  @Delete(':id1/listings/:id2')
+  async deleteListing(
+    @CurrentUser() user: User,
+    @Param() { id1, id2 }: TwoRouteIDDTO,
+  ): Promise<JSONResponse<Listing>> {
+    const listing = await this.biznessService.deleteBiznessListing(
+      user,
+      id1,
+      id2,
+    );
+
+    return this.responseService.jsonFormat('Bizness listing deleted', listing);
   }
 
   @ApiOperation({ summary: 'Get single bizness' })

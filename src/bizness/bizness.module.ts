@@ -3,13 +3,14 @@ import { Connection, Model } from 'mongoose';
 
 import { BIZNESS, BIZNESSRATING, DB_CONNECTION } from '@constants/index';
 import { UtilModule } from '@util/util.module';
+import { ListingModule } from '@src/listing/listing.module';
 import { Bizness, BiznessRating } from './interfaces';
 import { biznessRatingsSchema, biznessSchema } from './schemas/bizness.schema';
 import { BiznessService } from './bizness.service';
 import { BiznessController } from './bizness.controller';
 
 @Module({
-  imports: [UtilModule],
+  imports: [UtilModule, ListingModule],
   providers: [
     {
       provide: BIZNESS,

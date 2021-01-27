@@ -12,6 +12,13 @@ import {
   AggregatePaginationResult,
   PaginationService,
 } from '@util/pagination.service';
+import { ListingService } from '@src/listing/listing.service';
+import {
+  GetUserListingsDTO,
+  ListingDTO,
+  UpdateListingDTO,
+} from '@src/listing/dtos/listing.dto';
+import { JSONListing, Listing } from '@src/listing/interfaces';
 import { Bizness, BiznessRating, JSONBizness } from './interfaces';
 import {
   BiznessDTO,
@@ -30,6 +37,7 @@ export class BiznessService {
     private readonly biznessRatingModel: Model<BiznessRating>,
 
     private readonly paginationService: PaginationService,
+    private readonly listingService: ListingService,
   ) {}
 
   async createSingleBizness(
@@ -40,6 +48,67 @@ export class BiznessService {
       owner: user.id,
       ...biznessDTO,
     });
+  }
+
+  async createBiznessListing(
+    user: User,
+    _id: string,
+    listingDTO: ListingDTO,
+  ): Promise<Listing> {
+    const bizness = await this.findBiznessOrFail({
+      owner: user.id,
+      _id,
+      isDeleted: false,
+    });
+
+    return this.listingService.createListing(bizness.id, listingDTO);
+  }
+
+  async getBiznessListing(
+    user: User,
+    biznessID: string,
+    getUserListingDTO: GetUserListingsDTO,
+  ): Promise<AggregatePaginationResult<JSONListing>> {
+    const bizness = await this.findBiznessOrFail({
+      owner: user.id,
+      _id: biznessID,
+      isDeleted: false,
+    });
+
+    return this.listingService.getListings(getUserListingDTO, bizness.id);
+  }
+
+  async updateBiznessListing(
+    user: User,
+    biznessID: string,
+    listingID: string,
+    updateListingDTO: UpdateListingDTO,
+  ): Promise<JSONListing> {
+    const bizness = await this.findBiznessOrFail({
+      owner: user.id,
+      _id: biznessID,
+      isDeleted: false,
+    });
+
+    return this.listingService.updateListing(
+      listingID,
+      bizness.id,
+      updateListingDTO,
+    );
+  }
+
+  async deleteBiznessListing(
+    user: User,
+    biznessID: string,
+    listingID: string,
+  ): Promise<Listing> {
+    const bizness = await this.findBiznessOrFail({
+      owner: user.id,
+      _id: biznessID,
+      isDeleted: false,
+    });
+
+    return this.listingService.deleteListing(listingID, bizness.id);
   }
 
   async getSingleBizness(_id: string): Promise<JSONBizness> {

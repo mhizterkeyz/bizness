@@ -123,7 +123,7 @@ export class ListingService {
     return this.getSingleListing(_id);
   }
 
-  async deleteBizness(_id: string, bizness: string): Promise<Listing> {
+  async deleteListing(_id: string, bizness: string): Promise<Listing> {
     const listing = await this.findListingOrFail({
       _id,
       bizness,
