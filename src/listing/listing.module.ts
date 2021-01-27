@@ -2,11 +2,13 @@ import { Module } from '@nestjs/common';
 import { Connection, Model } from 'mongoose';
 
 import { DB_CONNECTION, LISTING, LISTINGRATING } from '@constants/index';
+import { UploaderModule } from '@uploader/uploader.module';
 import { Listing, ListingRating } from './interfaces';
 import { listingSchema, listingRatingsSchema } from './schemas/listing.schema';
 import { ListingService } from './listing.service';
 
 @Module({
+  imports: [UploaderModule],
   providers: [
     {
       provide: LISTING,
