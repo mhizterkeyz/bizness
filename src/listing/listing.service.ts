@@ -12,9 +12,9 @@ import { UploadService } from '@uploader/uploader.service';
 import {
   AggregatePaginationResult,
   PaginationService,
-} from '@src/util/pagination.service';
-import { User } from '@src/user/interfaces';
-import { Bizness } from '@src/bizness/interfaces';
+} from '@util/pagination.service';
+import { User } from '@user/interfaces';
+import { Bizness } from '@bizness/interfaces';
 import { JSONListing, Listing, ListingRating } from './interfaces';
 import {
   GetListingsDTO,

@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 
-import { coordinatesSchema } from '@src/common/schemas';
+import { coordinatesSchema } from '@common/schemas';
 
 export const userSchema = new Schema(
   {

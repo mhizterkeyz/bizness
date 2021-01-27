@@ -9,9 +9,9 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { FileUploadDTO } from '@src/uploader/dto';
-import { PaginationDTO } from '@src/util/pagination.service';
-import { RateDTO } from '@src/common/dtos';
+import { FileUploadDTO } from '@uploader/dto';
+import { PaginationDTO } from '@util/pagination.service';
+import { RateDTO } from '@common/dtos';
 
 export class ListingDTO {
   @ApiProperty({

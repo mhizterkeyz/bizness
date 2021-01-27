@@ -1,4 +1,4 @@
-import { ENV, ENVs } from '@src/common/interfaces';
+import { ENV, ENVs } from '@common/interfaces';
 
 export interface Configuration {
   env: ENV;

@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { Coordinates } from '@src/common/interfaces';
+import { Coordinates } from '@common/interfaces';
 
 interface BaseUser {
   name?: string;

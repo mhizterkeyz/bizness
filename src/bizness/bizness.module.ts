@@ -3,7 +3,7 @@ import { Connection, Model } from 'mongoose';
 
 import { BIZNESS, BIZNESSRATING, DB_CONNECTION } from '@constants/index';
 import { UtilModule } from '@util/util.module';
-import { ListingModule } from '@src/listing/listing.module';
+import { ListingModule } from '@listing/listing.module';
 import { Bizness, BiznessRating } from './interfaces';
 import { biznessRatingsSchema, biznessSchema } from './schemas/bizness.schema';
 import { BiznessService } from './bizness.service';

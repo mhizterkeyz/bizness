@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import configuration from '@config/configuration';
-import { ENV } from '@src/common/interfaces';
+import { ENV } from '@common/interfaces';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {

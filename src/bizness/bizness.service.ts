@@ -12,13 +12,13 @@ import {
   AggregatePaginationResult,
   PaginationService,
 } from '@util/pagination.service';
-import { ListingService } from '@src/listing/listing.service';
+import { ListingService } from 'listing/listing.service';
 import {
   GetUserListingsDTO,
   ListingDTO,
   UpdateListingDTO,
-} from '@src/listing/dtos/listing.dto';
-import { JSONListing, Listing } from '@src/listing/interfaces';
+} from 'listing/dtos/listing.dto';
+import { JSONListing, Listing } from 'listing/interfaces';
 import { Bizness, BiznessRating, JSONBizness } from './interfaces';
 import {
   BiznessDTO,

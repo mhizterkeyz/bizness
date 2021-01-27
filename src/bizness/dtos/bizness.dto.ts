@@ -9,7 +9,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { AddressUpdateDTO, CoordinatesDTO, RateDTO } from '@src/common/dtos';
+import { AddressUpdateDTO, CoordinatesDTO, RateDTO } from '@common/dtos';
 import { PaginationDTO } from '@util/pagination.service';
 
 export class BiznessDTO {

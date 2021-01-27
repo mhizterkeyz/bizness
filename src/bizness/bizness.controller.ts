@@ -25,9 +25,9 @@ import {
   GetUserListingsDTO,
   ListingDTO,
   UpdateListingDTO,
-} from '@src/listing/dtos/listing.dto';
+} from '@listing/dtos/listing.dto';
 import { RouteIDDTO, TwoRouteIDDTO } from '@common/dtos';
-import { JSONListing, Listing } from '@src/listing/interfaces';
+import { JSONListing, Listing } from '@listing/interfaces';
 import { BiznessService } from './bizness.service';
 import {
   BiznessDTO,

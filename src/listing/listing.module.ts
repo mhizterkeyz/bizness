@@ -3,10 +3,11 @@ import { Connection, Model } from 'mongoose';
 
 import { DB_CONNECTION, LISTING, LISTINGRATING } from '@constants/index';
 import { UploaderModule } from '@uploader/uploader.module';
-import { UtilModule } from '@src/util/util.module';
+import { UtilModule } from '@util/util.module';
 import { Listing, ListingRating } from './interfaces';
 import { listingSchema, listingRatingsSchema } from './schemas/listing.schema';
 import { ListingService } from './listing.service';
+import { ListingController } from './listing.controller';
 
 @Module({
   imports: [UploaderModule, UtilModule],
@@ -37,5 +38,6 @@ import { ListingService } from './listing.service';
     ListingService,
   ],
   exports: [ListingService],
+  controllers: [ListingController],
 })
 export class ListingModule {}
