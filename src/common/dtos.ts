@@ -3,7 +3,10 @@ import {
   IsLatitude,
   IsLongitude,
   IsNotEmpty,
+  IsNumber,
   IsString,
+  Max,
+  Min,
   ValidateNested,
 } from 'class-validator';
 
@@ -41,4 +44,15 @@ export class AddressUpdateDTO {
   @ValidateNested()
   @IsNotEmpty()
   coordinates: CoordinatesDTO;
+}
+
+export class RateDTO {
+  @ApiProperty({
+    description: 'rating from 0 - 5',
+    required: true,
+  })
+  @IsNumber()
+  @Min(0)
+  @Max(5)
+  rating: number;
 }

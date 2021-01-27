@@ -7,12 +7,10 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  Max,
-  Min,
   ValidateNested,
 } from 'class-validator';
 
-import { AddressUpdateDTO, CoordinatesDTO } from '@src/common/dtos';
+import { AddressUpdateDTO, CoordinatesDTO, RateDTO } from '@src/common/dtos';
 import { PaginationDTO } from '@util/pagination.service';
 
 export class BiznessDTO {
@@ -95,16 +93,7 @@ export class ListBiznessDTO extends ListUserBiznessDTO {
   distance?: number;
 }
 
-export class RateBiznessDTO {
-  @ApiProperty({
-    description: 'rating from 0 - 5',
-    required: true,
-  })
-  @IsNumber()
-  @Min(0)
-  @Max(5)
-  rating: number;
-}
+export class RateBiznessDTO extends RateDTO {}
 
 export class RouteIDDTO {
   @IsMongoId()

@@ -11,6 +11,7 @@ import {
 
 import { FileUploadDTO } from '@src/uploader/dto';
 import { PaginationDTO } from '@src/util/pagination.service';
+import { RateDTO } from '@src/common/dtos';
 
 export class ListingDTO {
   @ApiProperty({
@@ -27,6 +28,24 @@ export class ListingDTO {
   })
   @ValidateNested()
   @IsNotEmpty()
+  image: FileUploadDTO;
+}
+
+export class UpdateListingDTO {
+  @ApiProperty({
+    description: 'listing name',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  name: string;
+
+  @ApiProperty({
+    description: 'listing image',
+    required: false,
+  })
+  @ValidateNested()
+  @IsOptional()
   image: FileUploadDTO;
 }
 
@@ -65,3 +84,5 @@ export class GetListingsDTO extends GetUserListingsDTO {
   @IsOptional()
   distance?: number;
 }
+
+export class RateListingDTO extends RateDTO {}

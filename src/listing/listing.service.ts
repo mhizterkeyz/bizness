@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ClientSession, FilterQuery, Model, Types } from 'mongoose';
 import { isEmpty } from 'lodash';
 
@@ -8,8 +13,15 @@ import {
   AggregatePaginationResult,
   PaginationService,
 } from '@src/util/pagination.service';
+import { User } from '@src/user/interfaces';
+import { Bizness } from '@src/bizness/interfaces';
 import { JSONListing, Listing, ListingRating } from './interfaces';
-import { GetListingsDTO, ListingDTO } from './dtos/listing.dto';
+import {
+  GetListingsDTO,
+  ListingDTO,
+  RateListingDTO,
+  UpdateListingDTO,
+} from './dtos/listing.dto';
 import { getListingAggregation } from './listing.aggregation';
 
 @Injectable()
@@ -87,5 +99,103 @@ export class ListingService {
         limit,
       },
     );
+  }
+
+  async updateListing(
+    _id: string,
+    bizness: string,
+    updateListingDTO: UpdateListingDTO,
+  ): Promise<JSONListing> {
+    const listing = await this.findListingOrFail({
+      _id,
+      bizness,
+      isDeleted: false,
+    });
+    const { image: file, ...regularFields } = updateListingDTO;
+    const update: Partial<Listing> = { ...regularFields };
+
+    if (!isEmpty(file)) {
+      const { url: image } = await this.uploadService.uploadFile(file);
+      update.image = image;
+    }
+
+    await this.listingModel.updateOne({ _id: listing.id }, update);
+    return this.getSingleListing(_id);
+  }
+
+  async deleteBizness(_id: string, bizness: string): Promise<Listing> {
+    const listing = await this.findListingOrFail({
+      _id,
+      bizness,
+      isDeleted: false,
+    });
+
+    return this.listingModel.findOneAndUpdate(
+      { _id: listing.id },
+      { isDeleted: true },
+      { new: true, useFindAndModify: false },
+    );
+  }
+
+  async rateListing(
+    user: User,
+    listingID: string,
+    rateBiznessDTO: RateListingDTO,
+  ): Promise<JSONListing> {
+    const { rating } = rateBiznessDTO;
+    const listing = await (
+      await this.findListingOrFail({
+        _id: listingID,
+      })
+    )
+      .populate('bizness')
+      .execPopulate();
+
+    if (user.id.toString() === (<Bizness>listing.bizness).owner.toString()) {
+      throw new BadRequestException('you cannot rate your own listing');
+    }
+
+    await this.listingRatingModel.findOneAndUpdate(
+      {
+        ratedBy: user.id,
+        listing: listing.id,
+      },
+      { isDeleted: false, rating },
+      { upsert: true, useFindAndModify: false, new: true },
+    );
+
+    return this.getSingleListing(listingID);
+  }
+
+  async getRating(user: User, listing: string): Promise<ListingRating> {
+    const rating = await this.findRatingOrFail({ ratedBy: user.id, listing });
+
+    return rating.populate('listing').execPopulate();
+  }
+
+  async findListingOrFail(query: FilterQuery<Listing>): Promise<Listing> {
+    query.isDeleted = false;
+
+    const listing = await this.listingModel.findOne(query);
+
+    if (!listing) {
+      throw new NotFoundException('listing not found');
+    }
+
+    return listing;
+  }
+
+  async findRatingOrFail(
+    query: FilterQuery<ListingRating>,
+  ): Promise<ListingRating> {
+    query.isDeleted = false;
+
+    const rating = await this.listingRatingModel.findOne(query);
+
+    if (!rating) {
+      throw new NotFoundException('rating not found');
+    }
+
+    return rating;
   }
 }
