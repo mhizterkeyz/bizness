@@ -50,11 +50,16 @@ export class ListingController {
     name: 'listingID',
     required: true,
   })
+  @ApiQuery({ type: GetListingsDTO })
   @Get(':id')
   async getSingleListing(
     @Param() { id }: RouteIDDTO,
+    @Query() getListingDTO: GetListingsDTO,
   ): Promise<JSONResponse<JSONListing>> {
-    const listing = await this.listingService.getSingleListing(id);
+    const listing = await this.listingService.getSingleListing(
+      id,
+      getListingDTO,
+    );
 
     return this.responseService.jsonFormat('Bizness listing', listing);
   }

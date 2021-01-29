@@ -52,8 +52,20 @@ export class ListingService {
     return this.listingModel.create(payload);
   }
 
-  async getSingleListing(id: string): Promise<JSONListing> {
-    const pipeline = getListingAggregation({ _id: Types.ObjectId(id) });
+  async getSingleListing(
+    id: string,
+    getListingsDTO: GetListingsDTO,
+  ): Promise<JSONListing> {
+    const { latitude, longitude } = getListingsDTO;
+    let coordinates = null;
+    if (latitude && longitude) {
+      coordinates = { latitude, longitude };
+    }
+    const pipeline = getListingAggregation(
+      { _id: Types.ObjectId(id) },
+      null,
+      coordinates,
+    );
     const [listing] = await this.listingModel.aggregate<JSONListing>(pipeline);
 
     if (isEmpty(listing)) {
@@ -120,7 +132,7 @@ export class ListingService {
     }
 
     await this.listingModel.updateOne({ _id: listing.id }, update);
-    return this.getSingleListing(_id);
+    return this.getSingleListing(_id, {});
   }
 
   async deleteListing(_id: string, bizness: string): Promise<Listing> {
@@ -164,7 +176,7 @@ export class ListingService {
       { upsert: true, useFindAndModify: false, new: true },
     );
 
-    return this.getSingleListing(listingID);
+    return this.getSingleListing(listingID, {});
   }
 
   async getRating(user: User, listing: string): Promise<ListingRating> {

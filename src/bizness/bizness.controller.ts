@@ -230,11 +230,16 @@ export class BiznessController {
     description: 'bizness id',
     required: true,
   })
+  @ApiQuery({ type: ListBiznessDTO })
   @Get(':id')
   async getSingleBizness(
     @Param() { id }: RouteIDDTO,
+    @Query() listBiznessDTO: ListBiznessDTO,
   ): Promise<JSONResponse<JSONBizness>> {
-    const bizness = await this.biznessService.getSingleBizness(id);
+    const bizness = await this.biznessService.getSingleBizness(
+      id,
+      listBiznessDTO,
+    );
 
     return this.responseService.jsonFormat('bizness', bizness);
   }

@@ -111,10 +111,22 @@ export class BiznessService {
     return this.listingService.deleteListing(listingID, bizness.id);
   }
 
-  async getSingleBizness(_id: string): Promise<JSONBizness> {
-    const aggregation = listUserBiznessAggregation({
-      _id: Types.ObjectId(_id),
-    });
+  async getSingleBizness(
+    _id: string,
+    listBiznessDTO: ListBiznessDTO,
+  ): Promise<JSONBizness> {
+    const { latitude, longitude } = listBiznessDTO;
+    let coordinates = null;
+    if (latitude && longitude) {
+      coordinates = { latitude, longitude };
+    }
+    const aggregation = listUserBiznessAggregation(
+      {
+        _id: Types.ObjectId(_id),
+      },
+      null,
+      coordinates,
+    );
     const [bizness] = await this.biznessModel.aggregate<JSONBizness>(
       aggregation,
     );
@@ -193,7 +205,7 @@ export class BiznessService {
     const update = { ...regularFields, ...addressUpdateDTO };
 
     await this.biznessModel.updateOne({ _id: bizness.id }, update);
-    return this.getSingleBizness(_id);
+    return this.getSingleBizness(_id, {});
   }
 
   async deleteBizness(user: User, _id: string): Promise<Bizness> {
@@ -233,7 +245,7 @@ export class BiznessService {
       { upsert: true, useFindAndModify: false, new: true },
     );
 
-    return this.getSingleBizness(biznessID);
+    return this.getSingleBizness(biznessID, {});
   }
 
   async getRating(user: User, bizness: string): Promise<BiznessRating> {
